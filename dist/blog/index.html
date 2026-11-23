@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Zenith engineering notes on efficient inference.">
+<meta name="theme-color" content="#0a0a0a">
+<title>Engineering · Zenith</title>
+<link rel="alternate" hreflang="en" href="/blog/">
+<link rel="alternate" hreflang="zh-CN" href="/zh/blog/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="/assets/fonts/inter.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/v2.css?v=7">
+<link rel="stylesheet" href="/assets/pages.css?v=5">
+</head>
+<body class="home v2">
+<a class="skip" href="#main">Skip to content</a>
+<header class="nav" role="banner">
+  <a class="brand" href="/" aria-label="Zenith home"><svg viewBox="36 40 128 120" aria-hidden="true"><path fill="currentColor" d="M36 40H164V68H36Z M158.3 76L89.7 124H41.7L110.3 76Z M36 132H164V160H36Z"/></svg><span>Zenith</span></a>
+  <nav aria-label="Main">
+    <a href="/platform/">Platform</a>
+    <a href="/models/">Models</a>
+    <a href="/blog/">Engineering</a>
+    <a href="/news/">News</a>
+    <a href="/about/">About</a>
+  </nav>
+  <div class="nav-right"><a class="lang" href="/zh/blog/" hreflang="zh-CN" lang="zh-CN"><b>EN</b> · 中文</a><a class="btn btn-light btn-sm" href="https://tokens.aitist.ai/sign-up">Start building</a></div>
+</header>
+<main id="main" class="page">
+<section class="page-hero"><div class="wrap">
+  <p class="label reveal">Engineering</p>
+  <h1 class="reveal">Show the work. <em>With the numbers.</em></h1>
+  <p class="lede reveal">How we make open models fast, correct and affordable to serve: methods, measurements and the conditions behind every claim.</p>
+  <div class="actions reveal"><a class="btn btn-light" href="/blog/pcie-inference/">Start with the hardware <span aria-hidden="true">→</span></a><a class="btn btn-ghost" href="https://tokens.aitist.ai/sign-up">Try Zenith Tokens</a></div>
+  
+</div></section>
+<section class="sec"><div class="wrap">
+  <a class="note-feature reveal" href="/blog/pcie-inference/"><div class="note-media"><img src="/assets/research/cover-0.webp" alt=""></div><div class="note-body"><p class="label">Systems · 2026-11-13</p><h2>Rethinking inference without NVLink</h2><p>On our RTX 6000D cluster, two GPUs in the same server talk more slowly than two servers do. Every design choice in our stack follows from that one measurement.</p><div class="note-kpis"><div><b>40.6 → 5.9</b><span>µs, one-row all-reduce</span></div><div><b>47%</b><span>of a prefill chunk was pure communication</span></div><div><b>36 → 10.9</b><span>ms per token, GLM-5.3 single stream</span></div></div></div></a>
+  <div class="note-grid"><a class="note-card reveal" href="/blog/million-token-context/"><div class="note-media"><img src="/assets/research/cover-1.webp" alt="" loading="lazy"></div>
+<div class="note-body"><p class="label">Long context · 2026-11-13</p><h3>Making a million tokens usable</h3><p>A million-token context is a capacity, communication and scheduling problem before it is a model feature. We do the KV accounting first, then take each model apart.</p><div class="note-kpi"><b>1,045,368</b><span>input tokens, three needles retrieved</span></div></div></a><a class="note-card reveal" href="/blog/kimi-deployment-frontier/"><div class="note-media"><img src="/assets/research/cover-2.webp" alt="" loading="lazy"></div>
+<div class="note-body"><p class="label">Deployment · 2026-11-13</p><h3>Finding the useful throughput frontier</h3><p>A faster batch is useful only while every user still gets an acceptable stream. We measured Kimi-K3 on eleven hardware configurations and drew the line at 40 tok/s per user.</p><div class="note-kpi"><b>1,991</b><span>tok/s total, 41 tok/s per user, 2×B200</span></div></div></a><a class="note-card reveal" href="/blog/agent-correctness/"><div class="note-media"><img src="/assets/research/cover-3.webp" alt="" loading="lazy"></div>
+<div class="note-body"><p class="label">Agent reliability · 2026-11-13</p><h3>Correctness beyond a successful response</h3><p>An HTTP 200 and valid JSON are not enough. Agent workloads need complete streams, correct tool arguments and faithful protocol behavior, so every fix here comes with a controlled comparison.</p><div class="note-kpi"><b>4.7% → 0</b><span>tool-argument leaks in long multi-turn sessions</span></div></div></a><a class="note-card reveal" href="/blog/kv-aware-serving/"><div class="note-media"><img src="/assets/research/cover-4.webp" alt="" loading="lazy"></div>
+<div class="note-body"><p class="label">Serving · 2026-11-13</p><h3>A cache hit is not the end of the journey</h3><p>Our cache hit rate was 98.6%, yet the first token still took 3.6 seconds. Following the bytes showed where the time went, and why a hit-rate dashboard can mislead.</p><div class="note-kpi"><b>98.6%</b><span>cache hit rate, 3.6 s first token</span></div></div></a><a class="note-card reveal" href="/blog/evidence-driven-engineering/"><div class="note-media"><img src="/assets/research/cover-5.webp" alt="" loading="lazy"></div>
+<div class="note-body"><p class="label">Engineering method · 2026-11-13</p><h3>Every iteration should leave better evidence</h3><p>Recursive self-improvement, the way we mean it: not a model changing its own weights, but a team of people, agents and a shared knowledge base that gets better at getting better.</p><div class="note-kpi"><b>227</b><span>commits across two repos, Oct 11–20</span></div></div></a></div>
+</div></section>
+<section class="sec"><div class="wrap"><div class="sec-head"><div><p class="label reveal">Method</p><h2 class="display-sm reveal">Frameworks we use</h2></div></div><div class="news-list"><a class="news-row reveal" href="/blog/inference-efficiency/"><time>2026-11-13</time><div><p class="tag">Inference · framework</p><h3 style="margin-top:10px">What does it mean to get more from every chip?</h3><p>A framework for measuring inference efficiency across latency, throughput and cost per completed task.</p></div><span class="more" style="color:var(--fg-2)"><span aria-hidden="true">→</span></span></a><a class="news-row reveal" href="/blog/target-verify-compound/"><time>2026-11-13</time><div><p class="tag">Method · framework</p><h3 style="margin-top:10px">Target, verify, compound</h3><p>How a measurable objective becomes a repeatable loop for systems improvement.</p></div><span class="more" style="color:var(--fg-2)"><span aria-hidden="true">→</span></span></a></div></div></section>
+</main>
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a class="brand" href="/" aria-label="Zenith home"><svg viewBox="36 40 128 120" aria-hidden="true"><path fill="currentColor" d="M36 40H164V68H36Z M158.3 76L89.7 124H41.7L110.3 76Z M36 132H164V160H36Z"/></svg><span>Zenith</span></a>
+        <p>Efficient inference for open models. Any GPU we touch turns to gold.</p>
+        <div class="actions" style="margin-top:22px"><a class="btn btn-light btn-sm" href="https://tokens.aitist.ai/sign-up">Start building <span aria-hidden="true">→</span></a></div>
+      </div>
+      <div class="footer-cols">
+        <div><p class="label">Product</p><a href="/platform/">Zenith Tokens</a><a href="/models/">Models &amp; pricing</a><a href="https://tokens.aitist.ai/dashboard">Console ↗</a><a href="https://tokens.aitist.ai/rankings">Rankings ↗</a></div>
+        <div><p class="label">Developers</p><a href="/docs/">Quickstart</a><a href="/credits/">Developer credits</a><a href="https://docs.newapi.pro/">API reference ↗</a></div>
+        <div><p class="label">Research</p><a href="/blog/">Engineering</a><a href="/blog/pcie-inference/">Inference without NVLink</a><a href="/blog/million-token-context/">Million-token context</a></div>
+        <div><p class="label">Company</p><a href="/about/">About</a><a href="/news/">News</a><a href="/security/">Security</a><a href="https://t.me/hokeemDeng">Telegram @hokeemDeng ↗</a></div>
+      </div>
+    </div>
+    <div class="footer-mark" aria-hidden="true">Zenith</div>
+    <div class="footer-base"><span>© 2026 Zenith</span><span>Made from sand</span></div>
+  </div>
+</footer>
+<script src="/assets/v2.js?v=5" defer></script>
+</body>
+</html>

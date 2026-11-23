@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Make your first call to Zenith Tokens in minutes.">
+<meta name="theme-color" content="#0a0a0a">
+<title>Quickstart · Zenith</title>
+<link rel="alternate" hreflang="en" href="/docs/">
+<link rel="alternate" hreflang="zh-CN" href="/zh/docs/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="/assets/fonts/inter.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/v2.css?v=7">
+<link rel="stylesheet" href="/assets/pages.css?v=5">
+</head>
+<body class="home v2">
+<a class="skip" href="#main">Skip to content</a>
+<header class="nav" role="banner">
+  <a class="brand" href="/" aria-label="Zenith home"><svg viewBox="36 40 128 120" aria-hidden="true"><path fill="currentColor" d="M36 40H164V68H36Z M158.3 76L89.7 124H41.7L110.3 76Z M36 132H164V160H36Z"/></svg><span>Zenith</span></a>
+  <nav aria-label="Main">
+    <a href="/platform/">Platform</a>
+    <a href="/models/">Models</a>
+    <a href="/blog/">Engineering</a>
+    <a href="/news/">News</a>
+    <a href="/about/">About</a>
+  </nav>
+  <div class="nav-right"><a class="lang" href="/zh/docs/" hreflang="zh-CN" lang="zh-CN"><b>EN</b> · 中文</a><a class="btn btn-light btn-sm" href="https://tokens.aitist.ai/sign-up">Start building</a></div>
+</header>
+<main id="main" class="page">
+<section class="page-hero"><div class="wrap">
+  <p class="label reveal">Developers · Quickstart</p>
+  <h1 class="reveal">Your first call <em>in three steps.</em></h1>
+  <p class="lede reveal">Zenith Tokens speaks the OpenAI API. If your code already works with OpenAI, change the base URL and the key.</p>
+  <div class="actions reveal"><a class="btn btn-light" href="https://tokens.aitist.ai/sign-up">Create an account <span aria-hidden="true">→</span></a><a class="btn btn-ghost" href="https://docs.newapi.pro/">Full API reference ↗</a></div>
+  
+</div></section>
+<section class="sec"><div class="wrap split">
+  <aside class="split-aside"><p class="label">On this page</p><a href="#key">1. Get a key</a><a href="#call">2. Make a call</a><a href="#apps">3. Use it in apps</a><a href="#help">Help</a></aside>
+  <div class="prose">
+    <h2 id="key">1. Get a key</h2>
+    <p><a href="https://tokens.aitist.ai/sign-up">Create an account</a> on Zenith Tokens, open the <a href="https://tokens.aitist.ai/dashboard">console</a> and create an API key. You can set a quota, an expiry and the models each key may call.</p>
+    <p>Base URL: <strong>https://tokens.aitist.ai/v1</strong></p>
+    <h2 id="call">2. Make a call</h2>
+    <p>With curl or the OpenAI Python SDK:</p>
+  </div>
+</div>
+<div class="wrap split" style="margin-top:20px"><div></div><div style="max-width:760px"><div class="code"><div class="code-bar"><span><i></i><i></i><i></i></span><span>curl · OpenAI-compatible</span></div><pre><span class="kw">curl</span> https://tokens.aitist.ai/v1/chat/completions \
+  -H <span class="s">"Authorization: Bearer $ZENITH_API_KEY"</span> \
+  -H <span class="s">"Content-Type: application/json"</span> \
+  -d <span class="s">'{
+    "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+    "messages": [{"role": "user", "content": "Hello, Zenith"}]
+  }'</span></pre></div><div style="height:16px"></div><div class="code"><div class="code-bar"><span><i></i><i></i><i></i></span><span>python · openai SDK</span></div><pre><span class="kw">from</span> openai <span class="kw">import</span> OpenAI
+
+client = OpenAI(
+    base_url=<span class="s">"https://tokens.aitist.ai/v1"</span>,
+    api_key=<span class="s">"sk-..."</span>,  <span class="c"># create a key in the console</span>
+)
+
+reply = client.chat.completions.create(
+    model=<span class="s">"zai-org/GLM-5.3"</span>,
+    messages=[{<span class="s">"role"</span>: <span class="s">"user"</span>, <span class="s">"content"</span>: <span class="s">"Summarize this repo."</span>}],
+    stream=<span class="kw">True</span>,
+)
+<span class="kw">for</span> chunk <span class="kw">in</span> reply:
+    print(chunk.choices[0].delta.content <span class="kw">or</span> <span class="s">""</span>, end=<span class="s">""</span>)</pre></div></div></div>
+<div class="wrap split" style="margin-top:20px"><div></div>
+  <div class="prose">
+    <p>Any model on the <a href="/models/">models page</a> works. Copy the model name exactly, for example <strong>moonshotai/Kimi-K3.1-Pro</strong>.</p>
+    <h2 id="apps">3. Use it in apps</h2>
+    <ul>
+      <li><strong>Cherry Studio, CC Switch:</strong> use the one-click configuration in the console, or add an OpenAI-compatible provider with the base URL above and your key.</li>
+      <li><strong>Agent frameworks:</strong> any framework that accepts an OpenAI base URL works. Streaming uses server-sent events.</li>
+      <li><strong>Monitoring:</strong> usage, cost and latency per key appear in the console in real time.</li>
+    </ul>
+    <h2 id="help">Help</h2>
+    <p>The full API reference for the gateway is at <a href="https://docs.newapi.pro/">docs.newapi.pro</a>. For anything else, message us on Telegram at <a href="https://t.me/hokeemDeng">@hokeemDeng</a>.</p>
+  </div>
+</div></section>
+<section class="cta-band"><div class="wrap">
+  <p class="label reveal">Zenith Tokens</p>
+  <h2 class="display-sm reveal">Make your first call in <em>minutes.</em></h2>
+  <div class="actions reveal"><a class="btn btn-light" href="https://tokens.aitist.ai/sign-up">Get an API key <span aria-hidden="true">→</span></a><a class="btn btn-ghost" href="/docs/">Read the quickstart</a><a class="btn btn-ghost" href="https://t.me/hokeemDeng">Talk to us on Telegram</a></div>
+</div></section>
+</main>
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a class="brand" href="/" aria-label="Zenith home"><svg viewBox="36 40 128 120" aria-hidden="true"><path fill="currentColor" d="M36 40H164V68H36Z M158.3 76L89.7 124H41.7L110.3 76Z M36 132H164V160H36Z"/></svg><span>Zenith</span></a>
+        <p>Efficient inference for open models. Any GPU we touch turns to gold.</p>
+        <div class="actions" style="margin-top:22px"><a class="btn btn-light btn-sm" href="https://tokens.aitist.ai/sign-up">Start building <span aria-hidden="true">→</span></a></div>
+      </div>
+      <div class="footer-cols">
+        <div><p class="label">Product</p><a href="/platform/">Zenith Tokens</a><a href="/models/">Models &amp; pricing</a><a href="https://tokens.aitist.ai/dashboard">Console ↗</a><a href="https://tokens.aitist.ai/rankings">Rankings ↗</a></div>
+        <div><p class="label">Developers</p><a href="/docs/">Quickstart</a><a href="/credits/">Developer credits</a><a href="https://docs.newapi.pro/">API reference ↗</a></div>
+        <div><p class="label">Research</p><a href="/blog/">Engineering</a><a href="/blog/pcie-inference/">Inference without NVLink</a><a href="/blog/million-token-context/">Million-token context</a></div>
+        <div><p class="label">Company</p><a href="/about/">About</a><a href="/news/">News</a><a href="/security/">Security</a><a href="https://t.me/hokeemDeng">Telegram @hokeemDeng ↗</a></div>
+      </div>
+    </div>
+    <div class="footer-mark" aria-hidden="true">Zenith</div>
+    <div class="footer-base"><span>© 2026 Zenith</span><span>Made from sand</span></div>
+  </div>
+</footer>
+<script src="/assets/v2.js?v=5" defer></script>
+</body>
+</html>

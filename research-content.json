@@ -1,0 +1,340 @@
+[
+  {
+    "slug": "pcie-inference",
+    "title": "Rethinking inference without NVLink",
+    "category": "Systems",
+    "date": "October 2026",
+    "cover": 0,
+    "summary": "Measure the topology first. On PCIe-connected GPUs, a small collective can matter more than a faster matrix multiply.",
+    "metric": "40.6 → 5.9",
+    "unit": "µs · one-row all-reduce",
+    "source": "https://reports.aitist.ai/zhongtian/tech-share-slides-202610/deck/index.html#9",
+    "sections": [
+      [
+        "Start with the physical machine",
+        "Our October deployment work covered a 39-node cluster with eight RTX 6000D GPUs per node. Each GPU had a 400G network interface, but there was no NVLink. Four GPUs shared each CPU socket. Measured GPU transfers reached about 37 GB/s within a socket and about 20 GB/s across sockets. A single external network port reached 47.8 GB/s. This inverted a familiar assumption: crossing a server boundary could be less expensive than crossing the wrong boundary inside it."
+      ],
+      [
+        "Route communication by message size",
+        "Decode repeatedly exchanges small messages. In a TP8 microbenchmark with hidden size 5,120, BF16 and CUDA-graph timing, a one-row all-reduce took 40.6 µs through NCCL and 5.9 µs through PCIe-IPC. At 192 rows, the corresponding measurements were 350 and 172 µs. The benefit depends on message size; the smallest-message ratio is not an end-to-end model speedup. The kernel came from upstream FlashInfer / SGLang. Our contribution was adapting the path, checking numerical agreement within one ULP, and validating rollout on this topology."
+      ],
+      [
+        "Verify the user-visible result",
+        "In a 128K-context DeepSeek decode comparison, time per output token fell from 9.66 to 8.57 ms at eight concurrent requests, and from 13.05 to 10.98 ms at sixteen. These are medians of four runs per configuration in a same-period A/B comparison. The sixteen-request result is about a 16% reduction in time per token, substantially smaller than the microbenchmark ratio—and the more relevant measure for a serving decision."
+      ],
+      [
+        "Keep the scope of the result",
+        "These measurements describe one PCIe topology and workload. They do not establish that PCIe is generally faster than NVLink, or that one communication path wins at every batch size. We also rejected candidates: a quantized all-reduce incurred unacceptable numerical error, while a larger expert-parallel configuration increased latency. The useful result is a repeatable method: measure the physical links, select the path by message size, and require an end-to-end win before rollout."
+      ]
+    ],
+    "table": {
+      "headers": [
+        "Workload",
+        "Before",
+        "After"
+      ],
+      "rows": [
+        [
+          "1-row all-reduce",
+          "40.6 µs",
+          "5.9 µs"
+        ],
+        [
+          "128K decode · c8",
+          "9.66 ms/token",
+          "8.57 ms/token"
+        ],
+        [
+          "128K decode · c16",
+          "13.05 ms/token",
+          "10.98 ms/token"
+        ]
+      ],
+      "note": "October 16, 2026. Microbenchmark and end-to-end measurements have different units and scopes."
+    },
+    "extra_source": ""
+  },
+  {
+    "slug": "million-token-context",
+    "title": "Making a million tokens usable",
+    "category": "Long context",
+    "date": "October 2026",
+    "cover": 1,
+    "summary": "Long context is a capacity, communication and scheduling problem. We measure retrieval and latency together.",
+    "metric": "1,045,368",
+    "unit": "input tokens · three needles retrieved",
+    "source": "https://reports.aitist.ai/zhongtian/kimi-k3-tech-share-20261028/",
+    "sections": [
+      [
+        "Capacity comes before the context-window label",
+        "A model accepting a million-token setting is only the beginning. The serving system must reserve enough KV memory, process the prompt, transfer state, and generate a correct answer before the request times out. Our tests placed retrieval targets at different positions and used fresh prefixes to avoid accidentally measuring a warm cache. This matters: a repeated long prompt can look much faster without any underlying improvement in cold processing."
+      ],
+      [
+        "Change the parallelism to fit the phase",
+        "For GLM-5.3 on the PCIe cluster, prefill used pipeline parallelism while decode used tensor and context parallelism. The October technical report records million-token cold first-token latency moving from 710–717 seconds to 194–200 seconds, with eight of eight needle requests answered correctly. The baseline was measured through a gateway on October 16; the later run was direct to the entry service on October 19. This is a deployment-generation comparison, not a controlled single-change A/B experiment."
+      ],
+      [
+        "A separate pool for the longest requests",
+        "A Kimi-K3 configuration on two eight-GPU H200 nodes used TP8×PP2 with DCP8. It processed a 1,045,368-token input and retrieved all three planted targets in 167 seconds. Its reported KV pool was 12.4 million tokens. That capacity came with a trade-off: speculative decoding was disabled, and the short-input single-request generation measurement was 61 tok/s. That 61 tok/s figure is not the generation rate of the million-token retrieval test."
+      ],
+      [
+        "Measure the limits as carefully as the success",
+        "Needle retrieval is a useful integration test, not a complete evaluation of long-document reasoning. The same report family also records configurations that missed the latency threshold: Qwen3.8 required 811–825 seconds for the tested million-token cold request. We therefore report the model, configuration, cache state and task beside the context length. A dedicated long-context pool can protect shorter requests from these much larger memory and prefill demands."
+      ]
+    ],
+    "table": {
+      "headers": [
+        "Test",
+        "Observed result",
+        "Scope"
+      ],
+      "rows": [
+        [
+          "Kimi-K3 retrieval",
+          "1,045,368 input tokens",
+          "Three targets retrieved · 167 s"
+        ],
+        [
+          "GLM-5.3 cold TTFT",
+          "194–200 s",
+          "8/8 needle requests correct"
+        ],
+        [
+          "Kimi DCP8 KV pool",
+          "12.4M tokens",
+          "Capacity, not a single-request length"
+        ]
+      ],
+      "note": "October 2026 reports. Different models and tests; these rows are not a cross-model speed ranking."
+    },
+    "extra_source": "https://reports.aitist.ai/zhongtian/tech-share-slides-202610/deck/index.html#11"
+  },
+  {
+    "slug": "kimi-deployment-frontier",
+    "title": "Finding the useful throughput frontier",
+    "category": "Deployment",
+    "date": "October 29, 2026",
+    "cover": 2,
+    "summary": "A faster batch is useful only while each user still gets an acceptable stream. We compare measured configurations at that boundary.",
+    "metric": "1,991",
+    "unit": "output tok/s · 16 B200 GPUs",
+    "source": "https://reports.aitist.ai/zhongtian/kimi-k3-frontier/",
+    "sections": [
+      [
+        "Define useful output before maximizing it",
+        "Our Kimi-K3 deployment comparison uses a generation-speed threshold of at least 40 tokens per second per user. Increasing concurrency can raise total output while making each user wait longer. We therefore inspect the entire curve rather than presenting the largest throughput number as the best deployment. The workload used approximately 7.6K input tokens, 1,024 output tokens and distinct uncached prefixes, with two rounds per tested setting."
+      ],
+      [
+        "What the measured frontier shows",
+        "On sixteen B200 GPUs across two nodes, TP8×PP2, EFA, FP8 KV and DSpark k=2 delivered 1,991 output tok/s at concurrency 64. Per-user generation speed was 41 tok/s, with first-token latency p50 6.9 seconds and p90 12.0 seconds. Raising concurrency to 96 reached 2,348 output tok/s, but per-user speed fell to 34 tok/s and missed the chosen threshold. On sixteen H200 GPUs, the k=4 configuration delivered 496 output tok/s at concurrency 16, with 40 tok/s per user. These are different operating points, not a same-concurrency A/B."
+      ],
+      [
+        "Correct the measurement before publishing it",
+        "The October 29 report explicitly revises earlier throughput accounting. Adding individual request velocities had overstated throughput by roughly 2.3–2.5×. The corrected measure divides all output tokens by actual wall-clock completion time. We use that corrected series here. Generation speed after the first token and total batch throughput also include different time intervals; they should not be expected to equal concurrency multiplied by one quoted user-speed statistic."
+      ],
+      [
+        "Performance is only one acceptance gate",
+        "The H200 recommendation passed the 34-item API contract suite, the 18-item cross-model suite and the reported team acceptance checks. The faster B200 configuration had reported KVV results, including 408/408 tool-schema cases, but the comparison still marked broader acceptance as pending. Community-pruned REAP configurations could fit on less hardware and pass short interface tests while degrading agent tool behavior. We do not equate fitting, streaming quickly, or passing an API suite with production readiness. B300 results in these reports are projections, not measurements."
+      ]
+    ],
+    "table": {
+      "headers": [
+        "Configuration",
+        "Concurrency",
+        "Total output",
+        "Per-user speed"
+      ],
+      "rows": [
+        [
+          "16× B200 · k=2",
+          "64",
+          "1,991 tok/s",
+          "41 tok/s"
+        ],
+        [
+          "16× B200 · k=2",
+          "96",
+          "2,348 tok/s",
+          "34 tok/s · below threshold"
+        ],
+        [
+          "16× H200 · k=4",
+          "16",
+          "496 tok/s",
+          "40 tok/s"
+        ]
+      ],
+      "note": "Kimi-K3 · uncached ~7.6K input / 1,024 output · October 29 corrected wall-clock throughput series. B200 broader acceptance was pending."
+    },
+    "extra_source": ""
+  },
+  {
+    "slug": "agent-correctness",
+    "title": "Correctness beyond a successful response",
+    "category": "Agent reliability",
+    "date": "October 2026",
+    "cover": 3,
+    "summary": "An HTTP 200 and valid JSON are not enough. Agent workloads need complete streams, correct tool arguments and faithful protocol behavior.",
+    "metric": "97 → 0",
+    "unit": "empty tool arguments · 1,600-call evaluation",
+    "source": "https://reports.aitist.ai/zhongtian/tech-share-slides-202610/deck/index.html#23",
+    "sections": [
+      [
+        "The API is part of the model experience",
+        "An agent depends on details that a short chat test may never exercise: the finish reason, reasoning fields, tool arguments, output budget and the completion of a streamed response. A model can generate fluent text while the surrounding service breaks that contract. We replayed real-client sessions and used targeted suites to separate failures in the entry service, parser and worker from model behavior."
+      ],
+      [
+        "Constrain the right requests",
+        "For forced tool calls, constraining output to syntactically valid JSON still allowed empty argument objects. In a 1,600-call BFCL canary evaluation, schema-aware constraints reduced empty arguments from 97 to zero; reported Pass@1 moved from 87.4% to 92.6%, a 5.2 percentage-point increase. The change applied to named-function and required-tool modes, while automatic tool choice was left unchanged. This is the result of that evaluation, not a guarantee that tool calls can never fail."
+      ],
+      [
+        "More constraint is not always more correct",
+        "A different failure arose when full constrained decoding was applied to every request containing tools. In long-context sessions, termination markup leaked into argument content. The before sample recorded 17 affected calls out of 361. After the configuration repair, a separate set of 467 team-run real-session tool calls recorded no leakage or regression. Because those are separate samples, we report their sizes rather than treating the result as a universal zero-error rate. Claude Code, Codex and opencode replays were used to reproduce the compatibility problems."
+      ],
+      [
+        "Use several layers of acceptance",
+        "Kimi-K3 interface work improved the short API-contract suite from 24/34 to 34/34 after seven interface patches. Yet a pruned model could pass such checks while changing whether it chose to call a tool at all. Our acceptance process therefore includes interface contracts, task-level evaluation, multi-turn client replay, long-context retrieval and fault exercises. A successful HTTP status alone cannot detect an interrupted stream or a missing completion marker. Reliability has to be measured at the point where the agent consumes the answer."
+      ]
+    ],
+    "table": {
+      "headers": [
+        "Evaluation",
+        "Before",
+        "After"
+      ],
+      "rows": [
+        [
+          "Forced calls · empty arguments",
+          "97 / 1,600",
+          "0 / 1,600"
+        ],
+        [
+          "BFCL Pass@1",
+          "87.4%",
+          "92.6%"
+        ],
+        [
+          "Kimi API-contract checks",
+          "24 / 34",
+          "34 / 34"
+        ]
+      ],
+      "note": "Separate evaluations and models. API-contract coverage is not a measure of general model capability."
+    },
+    "extra_source": "https://reports.aitist.ai/zhongtian/kimi-k3-tech-share-20261028/"
+  },
+  {
+    "slug": "kv-aware-serving",
+    "title": "A cache hit is not the end of the journey",
+    "category": "Serving",
+    "date": "October 2026",
+    "cover": 4,
+    "summary": "Reusing computation only helps if the serving path also reuses the right state. Follow the bytes, not just the hit-rate dashboard.",
+    "metric": "57%",
+    "unit": "of mean TTFT spent transferring KV",
+    "source": "https://reports.aitist.ai/zhongtian/tech-share-slides-202610/deck/index.html#26",
+    "sections": [
+      [
+        "Keep a session close to its state",
+        "A coding agent repeatedly sends an expanding conversation. Routing its next turn to a worker that already holds the prefix can avoid recomputing most of that input. The GLM deployment report records prefix-cache hit rate increasing from 64% to 98% with session-affine routing. That is a workload-specific observation: an application with unrelated prompts will not get the same benefit."
+      ],
+      [
+        "The surprising cost after a hit",
+        "We joined gateway, entry, prefill and decode logs for 5,858 requests from October 19–21. In this workload, median input length was roughly 300K tokens and prefix-cache hit rate was 98.6%. Despite that reuse, KV transfer accounted for 57% of mean time to first token. Entry dispatch contributed 9%, waiting for uncached prefill 32%, and other work 2%. These are shares of the mean latency accounting, not shares of every individual request."
+      ],
+      [
+        "Find the missing reuse boundary",
+        "Transferred bytes remained proportional to the full input length even when most tokens hit the cache. The investigation found that the decode side did not reuse the prefix and that session affinity was applied to prefill but rarely returned a conversation to the same decode worker. The proposed repair combined decode affinity with decode-side prefix reuse. The source estimated a median TTFT reduction from 3.6 seconds to 1.2–1.4 seconds, but that was a forecast awaiting validation. We do not present it as an achieved speedup."
+      ],
+      [
+        "Schedule the work that remains",
+        "Caching also does not remove contention from cold requests. In the DeepSeek tests, length-aware placement protected a 4K short request while 128K requests saturated the system at concurrency sixteen: short-request first-token p90 moved from 12 seconds to 0.58 seconds. Admission control complemented placement by rejecting excess work rather than allowing every request to become slow. The lesson is to consider cache locality, transfer volume and queued prefill together, then validate the combined service behavior."
+      ]
+    ],
+    "table": {
+      "headers": [
+        "TTFT component",
+        "Share of mean"
+      ],
+      "rows": [
+        [
+          "KV transfer",
+          "57%"
+        ],
+        [
+          "Uncached prefill wait",
+          "32%"
+        ],
+        [
+          "Entry dispatch",
+          "9%"
+        ],
+        [
+          "Other",
+          "2%"
+        ]
+      ],
+      "note": "5,858 GLM-5.3 requests · October 19–21, 2026 · joined service logs. Cache hit rate: 98.6%."
+    },
+    "extra_source": ""
+  },
+  {
+    "slug": "evidence-driven-engineering",
+    "title": "Every iteration should leave better evidence",
+    "category": "Engineering method",
+    "date": "October 2026",
+    "cover": 5,
+    "summary": "Humans, agents and a shared knowledge base improve the system—and the way the next experiment is run.",
+    "metric": "227",
+    "unit": "commits across two repositories · ten days",
+    "source": "https://reports.aitist.ai/zhongtian/rsi-agent-workflow/",
+    "sections": [
+      [
+        "Improve the workflow as well as the code",
+        "Our use of recursive improvement refers to an engineering process, not a model autonomously changing its weights. Engineers define objectives and approve production changes. Agents investigate, measure, prepare patches and document evidence. Lessons become tests, procedures and repository guidance that the next investigation reads. The shared record makes progress less dependent on one person's memory or one agent's context."
+      ],
+      [
+        "Make the loop observable",
+        "The October 11–20 repository review counted 227 commits across two repositories, 168 of them agent co-authored, and 36 merged pull requests. One investigation split into twelve parallel research lines before an integration review. These figures describe recorded activity, not a productivity multiplier or proof that an agent independently delivered every change. The detailed workflow report describes four engineers directing the work."
+      ],
+      [
+        "First improve the measuring instrument",
+        "An early decode-step metric varied by 4–9% across repeated measurements of the same configuration because it included partially filled tail batches. A steady-state metric reduced the reported dispersion to 0.8–2.4%. Frequency locking and repeated baseline runs were then used to characterize drift. This made it possible to distinguish a small improvement from measurement noise. Candidates were compared with fixed request bytes, alternating runs and quality gates rather than judged from one favorable sample."
+      ],
+      [
+        "Let evidence overturn the plan",
+        "The process kept rejected designs alongside accepted ones. A prefill-overlap candidate gained only 0.52%, below its 3% threshold; an FP32 language-model head increased step time without improving acceptance. Cross-machine findings were rechecked on the same machine because hardware and restart variation could reverse a conclusion. Before rollout, the team prepared a canary, an acceptance checklist and a rollback path. The result we want to compound is not just faster inference, but a more reliable way to decide what to change next."
+      ],
+      [
+        "Keep the human boundary clear",
+        "The loop still depended on engineers to open or stop investigations, resolve conflicting evidence and approve production changes. The report also recorded unresolved reproducibility and coordination issues. Publishing those limitations is useful: it tells the next experiment where stronger controls are needed. A durable improvement leaves behind an executable test, a documented decision and enough context for another person to reproduce the reasoning."
+      ]
+    ],
+    "table": {
+      "headers": [
+        "Repository review",
+        "Observed count"
+      ],
+      "rows": [
+        [
+          "Commits · two repositories",
+          "227"
+        ],
+        [
+          "Agent co-authored commits",
+          "168 / 227 · 74% rounded"
+        ],
+        [
+          "Merged pull requests",
+          "36"
+        ],
+        [
+          "Parallel investigation lines",
+          "12"
+        ]
+      ],
+      "note": "October 11–20, 2026. Activity counts do not measure autonomous completion or productivity gains."
+    },
+    "extra_source": ""
+  }
+]

@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="HTTP 200 和合法的 JSON 远远不够。agent 负载需要完整的流式输出、正确的工具参数和忠实的协议行为，所以这里的每一项修复都附带对照实验。">
+<meta name="theme-color" content="#0a0a0a">
+<title>正确性，不止于接口返回成功 · Zenith</title>
+<link rel="alternate" hreflang="en" href="/zh/blog/agent-correctness/">
+<link rel="alternate" hreflang="zh-CN" href="/zh/blog/agent-correctness/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="/assets/fonts/inter.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/v2.css?v=7">
+<link rel="stylesheet" href="/assets/pages.css?v=5">
+</head>
+<body class="home v2">
+<a class="skip" href="#main">跳到正文</a>
+<header class="nav" role="banner">
+  <a class="brand" href="/zh/" aria-label="Zenith home"><svg viewBox="36 40 128 120" aria-hidden="true"><path fill="currentColor" d="M36 40H164V68H36Z M158.3 76L89.7 124H41.7L110.3 76Z M36 132H164V160H36Z"/></svg><span>Zenith</span></a>
+  <nav aria-label="Main">
+    <a href="/zh/platform/">平台</a>
+    <a href="/zh/models/">模型</a>
+    <a href="/zh/blog/">技术博客</a>
+    <a href="/zh/news/">动态</a>
+    <a href="/zh/about/">关于</a>
+  </nav>
+  <div class="nav-right"><a class="lang" href="/zh/blog/agent-correctness/" hreflang="en" lang="en">EN · <b>中文</b></a><a class="btn btn-light btn-sm" href="https://tokens.aitist.ai/sign-up">开始使用</a></div>
+</header>
+<main id="main" class="page">
+<article class="art">
+  <header class="art-hero wrap">
+    <a class="art-back" href="/zh/blog/">← 全部技术文章</a>
+    <p class="label">Agent 可靠性 · 2026-11-13</p>
+    <h1>正确性，不止于接口返回成功</h1>
+    <p class="art-dek">HTTP 200 和合法的 JSON 远远不够。agent 负载需要完整的流式输出、正确的工具参数和忠实的协议行为，所以这里的每一项修复都附带对照实验。</p>
+    <div class="art-kpis"><div><b>4.7% → 0</b><span>长上下文多轮下的工具参数泄漏</span></div><div><b>97 → 0</b><span>空参数错误，1,600 次强制调用</span></div><div><b>24 → 34</b><span>项官方接口用例（补丁后）</span></div></div>
+  </header>
+  <div class="art-cover wrap"><img src="/assets/research/cover-3.webp" alt="" decoding="async"></div>
+  <div class="art-layout wrap">
+    <aside class="art-toc"><p class="label">本页内容</p><a href="#leak">参数漏进了参数里</a><a href="#guards">常驻的保护</a><a href="#protocol">协议细节同样会弄坏 agent</a><a href="#k3">为 Kimi-K3 打的 7 处接口补丁</a><a href="#effort">思考档位与调用建议</a><a href="#drills">先演练故障，再设计底座</a><a href="#data">数据与来源</a></aside>
+    <div class="art-body">
+<h2 id="leak">参数漏进了参数里</h2>
+<p>在长时间、多轮的编码会话里，一小部分工具调用返回时是坏的：模型把自己的参数结束标记写进了参数文本。原因是 worker 对所有带工具的请求都做了全量约束解码。我们用三个真实客户端（Claude Code、Codex、opencode）回放真实会话复现了问题，并在同一台 worker 上只改一个开关做对照。</p>
+<figure class="art-fig"><svg class="fig-svg" viewBox="0 0 960 258" role="img" aria-label="" xmlns="http://www.w3.org/2000/svg"><text x="230.0" y="22.0" font-size="12" fill="#a9a59c" text-anchor="start" font-weight="400" ></text><text x="20.0" y="66.0" font-size="14.5" fill="#f3f1ec" text-anchor="start" font-weight="500" >工具参数泄漏</text><text x="218.0" y="54.0" font-size="1" fill="#a9a59c" text-anchor="start" font-weight="400" >—</text><rect x="230" y="40" width="477.8" height="26" rx="3" fill="#55524c"/><text x="717.8" y="59.0" font-size="14" fill="#a9a59c" text-anchor="start" font-weight="500" >4.7% (17 / 361)</text><rect x="230" y="76" width="3.0" height="26" rx="3" fill="#c9a86a"/><text x="243.0" y="95.0" font-size="14" fill="#c9a86a" text-anchor="start" font-weight="600" >0</text><text x="20.0" y="162.0" font-size="14.5" fill="#f3f1ec" text-anchor="start" font-weight="500" >空参数错误</text><text x="218.0" y="150.0" font-size="1" fill="#a9a59c" text-anchor="start" font-weight="400" >—</text><rect x="230" y="136" width="537.9" height="26" rx="3" fill="#55524c"/><text x="777.9" y="155.0" font-size="14" fill="#a9a59c" text-anchor="start" font-weight="500" >97 · 只约束合法 JSON</text><rect x="230" y="172" width="3.0" height="26" rx="3" fill="#c9a86a"/><text x="243.0" y="191.0" font-size="14" fill="#c9a86a" text-anchor="start" font-weight="600" >0 · 按参数 schema 约束</text><text x="20.0" y="250.0" font-size="12" fill="#6f6c66" text-anchor="start" font-weight="400" >泄漏：同一台 worker、真实 Claude Code 会话、只改一项，10-15。错误：BFCL 强制调用，每组 1,600 次，10-21 金丝雀。</text></svg><div class="fig-legend"><span><i style="background:#55524c"></i>修复前</span><span><i style="background:#c9a86a"></i>修复后</span></div><figcaption>图 1 · 两种失败模式，修复前后对比。</figcaption></figure>
+<p>改动上线后，我方真实会话中的 467 次工具调用，0 泄漏、0 退化。对于强制工具调用（指定函数名或 <code>required</code>），我们改为按该函数的参数 schema 约束解码，而不是只约束成合法 JSON；<code>auto</code> 保持不变。空参数错误从 97 次降到 0，Pass@1 从 87.4% 升到 92.6%。</p>
+<h2 id="guards">常驻的保护</h2>
+<ul><li><strong>退化循环保护。</strong>最近 2,048 个 token 中有 98% 以上是短片段重复时，以 <code>length</code> 结束生成。金丝雀中截断了 32 次里的 2 次。</li><li><strong>控制标记注入防护。</strong>用户正文里出现的控制标记拼写，一律按普通文本编码；结束与工具标记只按 token ID 生效。</li><li><strong>参考实现做 oracle。</strong>同一批请求与官方开源参考实现逐 token 比对。</li></ul>
+<h2 id="protocol">协议细节同样会弄坏 agent</h2>
+<p>同一轮工作还修复了四个从来不会在健康检查里报错的兼容问题：</p>
+<ul><li>分段思考内容以数组形式发给引擎，从第二轮起报错。</li><li>入口丢掉了思考档位字段。</li><li>客户端不传输出预算时，默认预留 min(32K, 剩余上下文)。</li><li>部分客户端默认携带的托管搜索工具会导致请求被拒。</li></ul>
+<h2 id="k3">为 Kimi-K3 打的 7 处接口补丁</h2>
+<div class="art-tbl"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>现象</th><th>怎么测出来的</th><th>改法</th></tr></thead><tbody><tr><td>关思考 + 温度 1.0 时，约 10% 不调用工具</td><td>60 次：温度 1.0 54/60 · 0.6 59/60 · 0 60/60</td><td>关思考且未指定温度时默认 0.6</td></tr><tr><td>开思考但未指定档位时，常用文字代替工具调用</td><td>36 次：不指定 30/36 · high 36/36（token 还少一半）</td><td>默认 thinking_effort=high</td></tr><tr><td>指定函数名的 tool_choice，finish_reason 报 stop</td><td>官方 34 项之一</td><td>有 tool_calls 时报 tool_calls</td></tr><tr><td>小输出预算被思考吃光，没有正文</td><td>64 token 预算用例</td><td>思考预算上限 = 总预算一半</td></tr><tr><td>OpenAI / Anthropic 的档位名不认</td><td>Messages / Responses 用例</td><td>映射到 K3 最近档位</td></tr><tr><td>prompt 缓存命中数不上报</td><td>缓存用例</td><td>启动开启 prompt token 明细</td></tr><tr><td>非法 role 返回 200</td><td>跨模型 18 项之一</td><td>使用官方编码器</td></tr></tbody></table></div><p class="fine">官方 34 项从 24/34 到 34/34，跨模型 18 项从 17/18 到 18/18，团队验收连续 4 轮全过。所有补丁都只在接口层，不改模型。</p></div>
+<h2 id="effort">思考档位与调用建议</h2>
+<div class="art-tbl"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>档位</th><th>AIME 24+25</th><th>说明</th></tr></thead><tbody><tr><td>50（对齐官方前）</td><td>97.9%</td><td>—</td></tr><tr><td>75（high / xhigh）</td><td>99.6%</td><td>开思考但不指定档位时的默认</td></tr><tr><td>100（max）</td><td>99.6%</td><td>输出 token 多约 18%</td></tr></tbody></table></div></div>
+<ul><li><strong>输出预算给足。</strong>推理 token 占输出的 76–82%，<code>max_tokens</code> 至少 4K–8K。</li><li><strong>看 <code>tool_calls</code>。</strong>指定函数时，统一返回 <code>tool_calls</code>。</li><li><strong>agent 用流式。</strong>非流式响应若在工具块闭合前被截断，已完成的调用可能丢失。</li><li><strong>按 Retry-After 重试。</strong>过载时会返回重试提示，请按提示重试。</li></ul>
+<h2 id="drills">先演练故障，再设计底座</h2>
+<div class="art-tbl"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>演练（改造前）</th><th>发生了什么</th><th>现在的底座</th></tr></thead><tbody><tr><td>2 倍过载 5 分钟</td><td>523 个请求全部 200；首字 17 → 148 s；健康检查一直是绿的</td><td>并发上限取实测拐点；排队上限 = 首字 SLO − 冷 prefill</td></tr><tr><td>kill worker</td><td>7 条流在 200 之后截断，没有 [DONE] 也没有 error</td><td>主备入口：3 次检查失败才切，实际空档 0.28–0.49 s</td></tr><tr><td>暂停 60 s</td><td>一条流静默卡住 70 s</td><td>token 间隔超时 60 s；首 token 超时随未缓存量增长</td></tr><tr><td>客户端断开</td><td>worker 7 s 内释放</td><td>只在未发出字节时换一台重试 1 次</td></tr></tbody></table></div><p class="fine">结论：HTTP 200 不等于通过。服务端必须能识别被截断的流，并设置 token 间隔超时。</p></div>
+<section class="art-data"><h2 id="data">数据与来源</h2>
+<div class="tbl-wrap"><table class="tbl"><thead><tr><th>测试</th><th>观测结果</th><th>范围</th></tr></thead><tbody><tr><td>工具参数泄漏</td><td>4.7% → 0</td><td>真实会话，只改一项，10-15</td></tr><tr><td>空参数错误</td><td>97 → 0</td><td>BFCL 强制调用，每组 1,600 次</td></tr><tr><td>官方接口用例（K3）</td><td>24/34 → 34/34</td><td>7 处接口层补丁后</td></tr></tbody></table></div>
+<p class="fine">2026 年 10 月在文中所述硬件与负载下的工程实测，不构成跨模型排名，也不是服务等级承诺。</p></section>
+      <div class="art-cta"><p>这些工程都运行在 Zenith Tokens 之下。</p><a class="btn btn-light btn-sm" href="https://tokens.aitist.ai/sign-up">试用 Zenith Tokens <span aria-hidden="true">→</span></a></div>
+      <nav class="art-nav"><a class="art-pn" href="/zh/blog/kimi-deployment-frontier/"><small>上一篇</small>寻找有用的吞吐边界</a><a class="art-pn next" href="/zh/blog/kv-aware-serving/"><small>下一篇</small>缓存命中，并不是终点</a></nav>
+    </div>
+  </div>
+</article>
+</main>
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a class="brand" href="/zh/" aria-label="Zenith home"><svg viewBox="36 40 128 120" aria-hidden="true"><path fill="currentColor" d="M36 40H164V68H36Z M158.3 76L89.7 124H41.7L110.3 76Z M36 132H164V160H36Z"/></svg><span>Zenith</span></a>
+        <p>面向开源模型的高效推理。经我们之手的每一块 GPU，都会点石成金。</p>
+        <div class="actions" style="margin-top:22px"><a class="btn btn-light btn-sm" href="https://tokens.aitist.ai/sign-up">开始使用 <span aria-hidden="true">→</span></a></div>
+      </div>
+      <div class="footer-cols">
+        <div><p class="label">产品</p><a href="/zh/platform/">Zenith Tokens</a><a href="/zh/models/">模型与价格</a><a href="https://tokens.aitist.ai/dashboard">控制台 ↗</a><a href="https://tokens.aitist.ai/rankings">排行榜 ↗</a></div>
+        <div><p class="label">开发者</p><a href="/zh/docs/">快速开始</a><a href="/zh/credits/">开发者额度</a><a href="https://docs.newapi.pro/">API 文档 ↗</a></div>
+        <div><p class="label">研究</p><a href="/zh/blog/">技术博客</a><a href="/zh/blog/pcie-inference/">无 NVLink 推理</a><a href="/zh/blog/million-token-context/">百万 token 上下文</a></div>
+        <div><p class="label">公司</p><a href="/zh/about/">关于</a><a href="/zh/news/">动态</a><a href="/zh/security/">安全</a><a href="https://t.me/hokeemDeng">Telegram @hokeemDeng ↗</a></div>
+      </div>
+    </div>
+    <div class="footer-mark" aria-hidden="true">Zenith</div>
+    <div class="footer-base"><span>© 2026 芯华算 Zenith</span><span>源于沙</span></div>
+  </div>
+</footer>
+<script src="/assets/v2.js?v=5" defer></script>
+</body>
+</html>

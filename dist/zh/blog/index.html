@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Zenith 关于高效推理的技术文章。">
+<meta name="theme-color" content="#0a0a0a">
+<title>技术博客 · Zenith</title>
+<link rel="alternate" hreflang="en" href="/zh/blog/">
+<link rel="alternate" hreflang="zh-CN" href="/zh/blog/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="/assets/fonts/inter.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/v2.css?v=7">
+<link rel="stylesheet" href="/assets/pages.css?v=5">
+</head>
+<body class="home v2">
+<a class="skip" href="#main">跳到正文</a>
+<header class="nav" role="banner">
+  <a class="brand" href="/zh/" aria-label="Zenith home"><svg viewBox="36 40 128 120" aria-hidden="true"><path fill="currentColor" d="M36 40H164V68H36Z M158.3 76L89.7 124H41.7L110.3 76Z M36 132H164V160H36Z"/></svg><span>Zenith</span></a>
+  <nav aria-label="Main">
+    <a href="/zh/platform/">平台</a>
+    <a href="/zh/models/">模型</a>
+    <a href="/zh/blog/">技术博客</a>
+    <a href="/zh/news/">动态</a>
+    <a href="/zh/about/">关于</a>
+  </nav>
+  <div class="nav-right"><a class="lang" href="/zh/blog/" hreflang="en" lang="en">EN · <b>中文</b></a><a class="btn btn-light btn-sm" href="https://tokens.aitist.ai/sign-up">开始使用</a></div>
+</header>
+<main id="main" class="page">
+<section class="page-hero"><div class="wrap">
+  <p class="label reveal">技术博客</p>
+  <h1 class="reveal">用作品说话，<em>带着数字。</em></h1>
+  <p class="lede reveal">我们如何让开源模型推理更快、更正确、更便宜：方法、实测数据，以及每个结论背后的条件。</p>
+  <div class="actions reveal"><a class="btn btn-light" href="/zh/blog/pcie-inference/">从硬件读起 <span aria-hidden="true">→</span></a><a class="btn btn-ghost" href="https://tokens.aitist.ai/sign-up">试用 Zenith Tokens</a></div>
+  
+</div></section>
+<section class="sec"><div class="wrap">
+  <a class="note-feature reveal" href="/zh/blog/pcie-inference/"><div class="note-media"><img src="/assets/research/cover-0.webp" alt=""></div><div class="note-body"><p class="label">系统 · 2026-11-13</p><h2>没有 NVLink 时，重新思考推理</h2><p>在我们的 RTX 6000D 集群上，同一台服务器里的两张卡之间，比两台服务器之间还慢。我们推理栈里的每个设计选择，都是从这一个实测结论推出来的。</p><div class="note-kpis"><div><b>40.6 → 5.9</b><span>µs，单行 all-reduce</span></div><div><b>47%</b><span>的 prefill 分块时间花在纯通信上</span></div><div><b>36 → 10.9</b><span>ms/token，GLM-5.3 单流</span></div></div></div></a>
+  <div class="note-grid"><a class="note-card reveal" href="/zh/blog/million-token-context/"><div class="note-media"><img src="/assets/research/cover-1.webp" alt="" loading="lazy"></div>
+<div class="note-body"><p class="label">长上下文 · 2026-11-13</p><h3>让百万 token 真正可用</h3><p>百万 token 上下文首先是容量、通信和调度问题，然后才是模型功能。我们先算 KV 账，再逐个模型拆瓶颈。</p><div class="note-kpi"><b>1,045,368</b><span>输入 token，三根针全部找回</span></div></div></a><a class="note-card reveal" href="/zh/blog/kimi-deployment-frontier/"><div class="note-media"><img src="/assets/research/cover-2.webp" alt="" loading="lazy"></div>
+<div class="note-body"><p class="label">部署 · 2026-11-13</p><h3>寻找有用的吞吐边界</h3><p>更快的批处理，只有在每位用户的输出依然流畅时才有意义。我们在 11 种硬件配置上实测了 Kimi-K3，把验收线划在每用户 40 tok/s。</p><div class="note-kpi"><b>1,991</b><span>tok/s 总吞吐，每用户 41 tok/s，2×B200</span></div></div></a><a class="note-card reveal" href="/zh/blog/agent-correctness/"><div class="note-media"><img src="/assets/research/cover-3.webp" alt="" loading="lazy"></div>
+<div class="note-body"><p class="label">Agent 可靠性 · 2026-11-13</p><h3>正确性，不止于接口返回成功</h3><p>HTTP 200 和合法的 JSON 远远不够。agent 负载需要完整的流式输出、正确的工具参数和忠实的协议行为，所以这里的每一项修复都附带对照实验。</p><div class="note-kpi"><b>4.7% → 0</b><span>长上下文多轮下的工具参数泄漏</span></div></div></a><a class="note-card reveal" href="/zh/blog/kv-aware-serving/"><div class="note-media"><img src="/assets/research/cover-4.webp" alt="" loading="lazy"></div>
+<div class="note-body"><p class="label">服务调度 · 2026-11-13</p><h3>缓存命中，并不是终点</h3><p>缓存命中率 98.6%，首字却仍要 3.6 秒。跟着字节走，我们找到了时间去了哪里，也明白了为什么命中率看板会误导人。</p><div class="note-kpi"><b>98.6%</b><span>缓存命中率，首字仍 3.6 s</span></div></div></a><a class="note-card reveal" href="/zh/blog/evidence-driven-engineering/"><div class="note-media"><img src="/assets/research/cover-5.webp" alt="" loading="lazy"></div>
+<div class="note-body"><p class="label">工程方法 · 2026-11-13</p><h3>每一次迭代，都应留下更好的证据</h3><p>我们所说的「递归自我改进」：不是模型自己改自己的权重，而是一支由人、agent 和共享知识库组成的团队，在「如何改进」这件事上越做越好。</p><div class="note-kpi"><b>227</b><span>次提交，两个仓库，10-11 至 10-20</span></div></div></a></div>
+</div></section>
+<section class="sec"><div class="wrap"><div class="sec-head"><div><p class="label reveal">方法</p><h2 class="display-sm reveal">我们使用的方法框架</h2></div></div><div class="news-list"><a class="news-row reveal" href="/zh/blog/inference-efficiency/"><time>2026-11-13</time><div><p class="tag">推理 · 方法框架</p><h3 style="margin-top:10px">从每一块芯片榨出更多，意味着什么？</h3><p>一个衡量推理效率的框架：同时看延迟、吞吐与每个完成任务的成本。</p></div><span class="more" style="color:var(--fg-2)"><span aria-hidden="true">→</span></span></a><a class="news-row reveal" href="/zh/blog/target-verify-compound/"><time>2026-11-13</time><div><p class="tag">方法 · 方法框架</p><h3 style="margin-top:10px">设定目标、验证、复利</h3><p>一个可衡量的目标，如何变成可重复的系统改进循环。</p></div><span class="more" style="color:var(--fg-2)"><span aria-hidden="true">→</span></span></a></div></div></section>
+</main>
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a class="brand" href="/zh/" aria-label="Zenith home"><svg viewBox="36 40 128 120" aria-hidden="true"><path fill="currentColor" d="M36 40H164V68H36Z M158.3 76L89.7 124H41.7L110.3 76Z M36 132H164V160H36Z"/></svg><span>Zenith</span></a>
+        <p>面向开源模型的高效推理。经我们之手的每一块 GPU，都会点石成金。</p>
+        <div class="actions" style="margin-top:22px"><a class="btn btn-light btn-sm" href="https://tokens.aitist.ai/sign-up">开始使用 <span aria-hidden="true">→</span></a></div>
+      </div>
+      <div class="footer-cols">
+        <div><p class="label">产品</p><a href="/zh/platform/">Zenith Tokens</a><a href="/zh/models/">模型与价格</a><a href="https://tokens.aitist.ai/dashboard">控制台 ↗</a><a href="https://tokens.aitist.ai/rankings">排行榜 ↗</a></div>
+        <div><p class="label">开发者</p><a href="/zh/docs/">快速开始</a><a href="/zh/credits/">开发者额度</a><a href="https://docs.newapi.pro/">API 文档 ↗</a></div>
+        <div><p class="label">研究</p><a href="/zh/blog/">技术博客</a><a href="/zh/blog/pcie-inference/">无 NVLink 推理</a><a href="/zh/blog/million-token-context/">百万 token 上下文</a></div>
+        <div><p class="label">公司</p><a href="/zh/about/">关于</a><a href="/zh/news/">动态</a><a href="/zh/security/">安全</a><a href="https://t.me/hokeemDeng">Telegram @hokeemDeng ↗</a></div>
+      </div>
+    </div>
+    <div class="footer-mark" aria-hidden="true">Zenith</div>
+    <div class="footer-base"><span>© 2026 芯华算 Zenith</span><span>源于沙</span></div>
+  </div>
+</footer>
+<script src="/assets/v2.js?v=5" defer></script>
+</body>
+</html>

@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Zenith Tokens 上的开源模型与按 token 计价。">
+<meta name="theme-color" content="#0a0a0a">
+<title>模型与价格 · Zenith</title>
+<link rel="alternate" hreflang="en" href="/models/">
+<link rel="alternate" hreflang="zh-CN" href="/zh/models/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="/assets/fonts/inter.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/v2.css?v=7">
+<link rel="stylesheet" href="/assets/pages.css?v=5">
+</head>
+<body class="home v2">
+<a class="skip" href="#main">跳到正文</a>
+<header class="nav" role="banner">
+  <a class="brand" href="/zh/" aria-label="Zenith home"><svg viewBox="36 40 128 120" aria-hidden="true"><path fill="currentColor" d="M36 40H164V68H36Z M158.3 76L89.7 124H41.7L110.3 76Z M36 132H164V160H36Z"/></svg><span>Zenith</span></a>
+  <nav aria-label="Main">
+    <a href="/zh/platform/">平台</a>
+    <a href="/zh/models/">模型</a>
+    <a href="/zh/blog/">技术博客</a>
+    <a href="/zh/news/">动态</a>
+    <a href="/zh/about/">关于</a>
+  </nav>
+  <div class="nav-right"><a class="lang" href="/models/" hreflang="en" lang="en">EN · <b>中文</b></a><a class="btn btn-light btn-sm" href="https://tokens.aitist.ai/sign-up">开始使用</a></div>
+</header>
+<main id="main" class="page">
+<section class="page-hero"><div class="wrap">
+  <p class="label reveal">模型与价格</p>
+  <h1 class="reveal">开源模型，<em>价格透明。</em></h1>
+  <p class="lede reveal">所有模型都通过同一个兼容 OpenAI 的 API 提供，按每百万 token 计价，按量计费。</p>
+  <div class="actions reveal"><a class="btn btn-light" href="https://tokens.aitist.ai/sign-up">获取 API key <span aria-hidden="true">→</span></a><a class="btn btn-ghost" href="https://tokens.aitist.ai/pricing">实时模型广场 ↗</a><a class="btn btn-ghost" href="https://tokens.aitist.ai/rankings">用量排行 ↗</a></div>
+  
+</div></section>
+<section class="sec"><div class="wrap">
+  <div class="sec-head"><div><p class="label reveal">当前可用</p><h2 class="display-sm reveal">五个模型，一个 key。</h2></div><p class="reveal">把完整的模型名填入任意兼容 OpenAI 请求的 <code>model</code> 字段即可。</p></div>
+  <div class="model-grid">
+    <article class="model reveal" style="--glow:rgba(77,107,254,.18)">
+      <div class="model-logo"><img class="" src="/assets/logos/deepseek-color.svg" alt="" width="30" height="30"></div>
+      <div><h3>DeepSeek-V4.1-Flash</h3><p class="vendor">深度求索 DeepSeek · <code style="font-size:12.5px">deepseek-ai/DeepSeek-V4.1-Flash</code></p></div>
+      <div class="tags"><i>快速</i><i>通用</i><i>批处理</i></div>
+      <div class="price"><div><small>输入</small><b>$0.10 <em>/ 1M</em></b></div><div><small>输出</small><b>$0.20 <em>/ 1M</em></b></div></div>
+    </article>
+    <article class="model reveal" style="--glow:rgba(52,96,252,.16)">
+      <div class="model-logo"><img class="" src="/assets/logos/zhipu-color.svg" alt="" width="30" height="30"></div>
+      <div><h3>GLM-5.3</h3><p class="vendor">智谱 · <code style="font-size:12.5px">zai-org/GLM-5.3</code></p></div>
+      <div class="tags"><i>编程</i><i>Agent</i><i>通用</i></div>
+      <div class="price"><div><small>输入</small><b>$0.10 <em>/ 1M</em></b></div><div><small>输出</small><b>$0.20 <em>/ 1M</em></b></div></div>
+    </article>
+    <article class="model reveal" style="--glow:rgba(52,96,252,.16)">
+      <div class="model-logo"><img class="" src="/assets/logos/zhipu-color.svg" alt="" width="30" height="30"></div>
+      <div><h3>glm-5.3-flash</h3><p class="vendor">智谱 · <code style="font-size:12.5px">glm-5.3-flash</code></p></div>
+      <div class="tags"><i>低延迟</i><i>对话</i></div>
+      <div class="price"><div><small>输入</small><b>$0.10 <em>/ 1M</em></b></div><div><small>输出</small><b>$0.20 <em>/ 1M</em></b></div></div>
+    </article>
+    <article class="model reveal" style="--glow:rgba(2,122,255,.16)">
+      <div class="model-logo"><img class="" src="/assets/logos/kimi-light.svg" alt="" width="30" height="30"></div>
+      <div><h3>Kimi-K3.1-Pro</h3><p class="vendor">月之暗面 Moonshot · <code style="font-size:12.5px">moonshotai/Kimi-K3.1-Pro</code></p></div>
+      <div class="tags"><i>Agent</i><i>长会话</i><i>编程</i></div>
+      <div class="price"><div><small>输入</small><b>$0.20 <em>/ 1M</em></b></div><div><small>输出</small><b>$0.40 <em>/ 1M</em></b></div></div>
+    </article>
+    <article class="model reveal" style="--glow:rgba(97,92,237,.18)">
+      <div class="model-logo"><img class="" src="/assets/logos/qwen-color.svg" alt="" width="30" height="30"></div>
+      <div><h3>qwen3.8-flash-next</h3><p class="vendor">阿里巴巴 通义 · <code style="font-size:12.5px">qwen3.8-flash-next</code></p></div>
+      <div class="tags"><i>低延迟</i><i>通用</i></div>
+      <div class="price"><div><small>输入</small><b>$0.10 <em>/ 1M</em></b></div><div><small>输出</small><b>$0.20 <em>/ 1M</em></b></div></div>
+    </article>
+    <a class="model reveal" href="https://tokens.aitist.ai/pricing" style="justify-content:center;align-items:flex-start;background:#0f0f0e">
+      <div class="model-logo" style="font-size:24px;color:var(--gold)">+</div>
+      <h3>更多模型见实时模型广场</h3>
+      <p style="color:var(--fg-2);font-size:15px">各模型的服务变体、实时延迟、吞吐与可用率。</p>
+      <span class="more" style="margin-top:auto">tokens.aitist.ai/pricing ↗</span>
+    </a>
+  </div>
+</div></section>
+
+<section class="sec"><div class="wrap">
+  <div class="sec-head"><div><p class="label reveal">价格表</p><h2 class="display-sm reveal">每百万 token，美元计价。</h2></div></div>
+  <div class="tbl-wrap reveal"><table class="tbl">
+    <thead><tr><th>模型</th><th>输入</th><th>输出</th><th>接口</th></tr></thead>
+    <tbody>
+<tr><td class="m"><img class="logo" src="/assets/logos/deepseek-color.svg" alt="" width="20" height="20">deepseek-ai/DeepSeek-V4.1-Flash<small>深度求索 DeepSeek</small></td><td class="p">$0.10 <em>/ 1M</em></td><td class="p">$0.20 <em>/ 1M</em></td><td>对话 · 兼容 OpenAI</td></tr>
+<tr><td class="m"><img class="logo" src="/assets/logos/zhipu-color.svg" alt="" width="20" height="20">zai-org/GLM-5.3<small>智谱</small></td><td class="p">$0.10 <em>/ 1M</em></td><td class="p">$0.20 <em>/ 1M</em></td><td>对话 · 兼容 OpenAI</td></tr>
+<tr><td class="m"><img class="logo" src="/assets/logos/zhipu-color.svg" alt="" width="20" height="20">glm-5.3-flash<small>智谱</small></td><td class="p">$0.10 <em>/ 1M</em></td><td class="p">$0.20 <em>/ 1M</em></td><td>对话 · 兼容 OpenAI</td></tr>
+<tr><td class="m"><img class="logo" src="/assets/logos/kimi-light.svg" alt="" width="20" height="20">moonshotai/Kimi-K3.1-Pro<small>月之暗面 Moonshot</small></td><td class="p">$0.20 <em>/ 1M</em></td><td class="p">$0.40 <em>/ 1M</em></td><td>对话 · 兼容 OpenAI</td></tr>
+<tr><td class="m"><img class="logo" src="/assets/logos/qwen-color.svg" alt="" width="20" height="20">qwen3.8-flash-next<small>阿里巴巴 通义</small></td><td class="p">$0.10 <em>/ 1M</em></td><td class="p">$0.20 <em>/ 1M</em></td><td>对话 · 兼容 OpenAI</td></tr>
+    </tbody>
+  </table></div>
+  <p class="fine">价格取自 2026 年 11 月 20 日的 Zenith Tokens 模型广场。Kimi-K3.1-Pro 另有 kimi-k3.1-pro 与 kimi-k3.1-pro-sgl 两个服务变体。实时价格与状态以 <a href="https://tokens.aitist.ai/pricing" style="color:var(--fg)">tokens.aitist.ai/pricing</a> 为准。</p>
+</div></section>
+
+<section class="sec"><div class="wrap">
+  <div class="sec-head"><div><p class="label reveal">如何选模型</p><h2 class="display-sm reveal">先跑起来，再按需升级。</h2></div></div>
+  <div class="cards-3">
+    <div class="img-box reveal"><img src="/assets/tiles/chip.webp" alt="" loading="lazy"><div><p class="k">默认之选</p><h3>DeepSeek-V4.1-Flash</h3><p>最低价档里强劲又快速的通用模型，适合作为对话、抽取和批处理的首选。</p></div></div>
+    <div class="img-box reveal"><img src="/assets/tiles/gold-gpu.webp" alt="" loading="lazy"><div><p class="k">编程与 Agent</p><h3>GLM-5.3 · Kimi-K3.1-Pro</h3><p>适合长时间的 Agent 会话与工具调用。Kimi-K3.1-Pro 提供多个服务变体。</p></div></div>
+    <div class="img-box reveal"><img src="/assets/tiles/crystal.webp" alt="" loading="lazy"><div><p class="k">低延迟</p><h3>GLM-5.3-Flash · Qwen3.8-Flash-Next</h3><p>轻量模型，适合首 token 延迟敏感的交互式产品。</p></div></div>
+  </div>
+</div></section>
+<section class="cta-band"><div class="wrap">
+  <p class="label reveal">Zenith Tokens</p>
+  <h2 class="display-sm reveal">几分钟内，完成<em>第一次调用。</em></h2>
+  <div class="actions reveal"><a class="btn btn-light" href="https://tokens.aitist.ai/sign-up">获取 API key <span aria-hidden="true">→</span></a><a class="btn btn-ghost" href="/zh/docs/">阅读快速开始</a><a class="btn btn-ghost" href="https://t.me/hokeemDeng">在 Telegram 联系我们</a></div>
+</div></section>
+</main>
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a class="brand" href="/zh/" aria-label="Zenith home"><svg viewBox="36 40 128 120" aria-hidden="true"><path fill="currentColor" d="M36 40H164V68H36Z M158.3 76L89.7 124H41.7L110.3 76Z M36 132H164V160H36Z"/></svg><span>Zenith</span></a>
+        <p>面向开源模型的高效推理。经我们之手的每一块 GPU，都会点石成金。</p>
+        <div class="actions" style="margin-top:22px"><a class="btn btn-light btn-sm" href="https://tokens.aitist.ai/sign-up">开始使用 <span aria-hidden="true">→</span></a></div>
+      </div>
+      <div class="footer-cols">
+        <div><p class="label">产品</p><a href="/zh/platform/">Zenith Tokens</a><a href="/zh/models/">模型与价格</a><a href="https://tokens.aitist.ai/dashboard">控制台 ↗</a><a href="https://tokens.aitist.ai/rankings">排行榜 ↗</a></div>
+        <div><p class="label">开发者</p><a href="/zh/docs/">快速开始</a><a href="/zh/credits/">开发者额度</a><a href="https://docs.newapi.pro/">API 文档 ↗</a></div>
+        <div><p class="label">研究</p><a href="/zh/blog/">技术博客</a><a href="/zh/blog/pcie-inference/">无 NVLink 推理</a><a href="/zh/blog/million-token-context/">百万 token 上下文</a></div>
+        <div><p class="label">公司</p><a href="/zh/about/">关于</a><a href="/zh/news/">动态</a><a href="/zh/security/">安全</a><a href="https://t.me/hokeemDeng">Telegram @hokeemDeng ↗</a></div>
+      </div>
+    </div>
+    <div class="footer-mark" aria-hidden="true">Zenith</div>
+    <div class="footer-base"><span>© 2026 芯华算 Zenith</span><span>源于沙</span></div>
+  </div>
+</footer>
+<script src="/assets/v2.js?v=5" defer></script>
+</body>
+</html>

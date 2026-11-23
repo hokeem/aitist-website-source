@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Zenith Tokens: one OpenAI-compatible API for leading open models, priced to be used.">
+<meta name="theme-color" content="#0a0a0a">
+<title>Zenith Tokens · Zenith</title>
+<link rel="alternate" hreflang="en" href="/platform/">
+<link rel="alternate" hreflang="zh-CN" href="/zh/platform/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="/assets/fonts/inter.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/v2.css?v=7">
+<link rel="stylesheet" href="/assets/pages.css?v=5">
+</head>
+<body class="home v2">
+<a class="skip" href="#main">Skip to content</a>
+<header class="nav" role="banner">
+  <a class="brand" href="/" aria-label="Zenith home"><svg viewBox="36 40 128 120" aria-hidden="true"><path fill="currentColor" d="M36 40H164V68H36Z M158.3 76L89.7 124H41.7L110.3 76Z M36 132H164V160H36Z"/></svg><span>Zenith</span></a>
+  <nav aria-label="Main">
+    <a href="/platform/">Platform</a>
+    <a href="/models/">Models</a>
+    <a href="/blog/">Engineering</a>
+    <a href="/news/">News</a>
+    <a href="/about/">About</a>
+  </nav>
+  <div class="nav-right"><a class="lang" href="/zh/platform/" hreflang="zh-CN" lang="zh-CN"><b>EN</b> · 中文</a><a class="btn btn-light btn-sm" href="https://tokens.aitist.ai/sign-up">Start building</a></div>
+</header>
+<main id="main" class="page">
+<section class="page-hero"><div class="wrap">
+  <p class="label reveal">Zenith Tokens</p>
+  <h1 class="reveal">Open models, one API. <em>Priced to be used.</em></h1>
+  <p class="lede reveal">Zenith Tokens is our inference platform: one OpenAI-compatible gateway to DeepSeek, GLM, Kimi and Qwen, served on the stack we research and measure. Open models start at $0.10 per million input tokens.</p>
+  <div class="actions reveal"><a class="btn btn-light" href="https://tokens.aitist.ai/sign-up">Start building <span aria-hidden="true">→</span></a><a class="btn btn-ghost" href="/models/">Models &amp; pricing</a><a class="btn btn-ghost" href="https://tokens.aitist.ai/sign-in">Sign in</a></div>
+  <div class="page-hero-art reveal"><img src="/assets/tiles/gpus-wide.webp" alt="" decoding="async"></div>
+</div></section>
+<section class="sec"><div class="wrap">
+  <div class="sec-head"><div><p class="label reveal">Works with what you use</p><h2 class="display-sm reveal">Change one URL.</h2></div><p class="reveal">Point any OpenAI-compatible client at <code>https://tokens.aitist.ai/v1</code>. Desktop clients can be configured in one click from the console.</p></div>
+  <div class="works reveal"><span>OpenAI SDK (Python, Node)</span><span>Cherry Studio</span><span>CC Switch</span><span>curl</span><span>Any OpenAI-compatible client</span></div>
+</div></section>
+
+<section class="sec"><div class="wrap">
+  <div class="sec-head"><div><p class="label reveal">Built for</p><h2 class="display-sm reveal">Real workloads, at open-model prices.</h2></div></div>
+  <div class="cards-4">
+    <div class="box reveal"><p class="k">Coding agents</p><h3>Long sessions, many tool calls.</h3><p>GLM-5.3 and Kimi-K3.1-Pro behind one key. Our correctness work targets complete streams and valid tool arguments.</p></div>
+    <div class="box reveal"><p class="k">Assistants &amp; chat</p><h3>Streaming chat for products.</h3><p>Fast Flash models for interactive apps, with server-sent events and per-key limits.</p></div>
+    <div class="box reveal"><p class="k">Search &amp; RAG</p><h3>Read long documents.</h3><p>Built on our long-context serving research, where capacity, retrieval and latency are measured together.</p></div>
+    <div class="box reveal"><p class="k">Batch &amp; data</p><h3>Process at scale.</h3><p>Classification, extraction and synthesis from $0.10 in / $0.20 out per million tokens.</p></div>
+  </div>
+</div></section>
+
+<section class="sec"><div class="wrap">
+  <div class="sec-head"><div><p class="label reveal">How it works</p><h2 class="display-sm reveal">Three steps to production.</h2></div></div>
+  <ol class="steps-h">
+    <li class="reveal"><b>01</b><h3>Create a key</h3><p>Sign up, then create an API key in the console. Set quotas and permissions per key.</p></li>
+    <li class="reveal"><b>02</b><h3>Connect</h3><p>Use the OpenAI-compatible endpoint from your SDK, agent framework or desktop client.</p></li>
+    <li class="reveal"><b>03</b><h3>Monitor</h3><p>Track tokens, cost and latency per key and per model in real time.</p></li>
+  </ol>
+  <div style="margin-top:48px" class="reveal"><div class="code"><div class="code-bar"><span><i></i><i></i><i></i></span><span>curl · OpenAI-compatible</span></div><pre><span class="kw">curl</span> https://tokens.aitist.ai/v1/chat/completions \
+  -H <span class="s">"Authorization: Bearer $ZENITH_API_KEY"</span> \
+  -H <span class="s">"Content-Type: application/json"</span> \
+  -d <span class="s">'{
+    "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+    "messages": [{"role": "user", "content": "Hello, Zenith"}]
+  }'</span></pre></div></div>
+</div></section>
+
+<section class="sec"><div class="wrap">
+  <div class="sec-head"><div><p class="label reveal">Platform</p><h2 class="display-sm reveal">The parts you would otherwise build.</h2></div></div>
+  <div class="cards-3">
+    <div class="box reveal"><p class="k">Unified API</p><h3>One protocol, many models.</h3><p>OpenAI-compatible chat routes, with Claude, Gemini and Responses-style routes supported by the gateway.</p></div>
+    <div class="box reveal"><p class="k">Routing</p><h3>Load balancing.</h3><p>Requests are spread across upstream channels with automatic failover.</p></div>
+    <div class="box reveal"><p class="k">Control</p><h3>Rate limits &amp; quotas.</h3><p>Set limits per key so one runaway agent cannot drain a team budget.</p></div>
+    <div class="box reveal"><p class="k">Billing</p><h3>Pay as you go.</h3><p>Token-based pricing with real-time usage and cost tracking.</p></div>
+    <div class="box reveal"><p class="k">Teams</p><h3>Shared access.</h3><p>Multi-user management with flexible permissions.</p></div>
+    <div class="box reveal"><p class="k">Transparency</p><h3>Live status &amp; rankings.</h3><p>Per-model availability, latency and usage rankings are public on the platform.</p></div>
+  </div>
+</div></section>
+
+<section class="sec"><div class="wrap">
+  <div class="sec-head"><div><p class="label reveal">The engineering underneath</p><h2 class="display-sm reveal">We publish the measurements.</h2></div><p class="reveal">Cheaper tokens come from better systems. Each number links to the note that explains how it was measured.</p></div>
+  <div class="reveal"><div class="stat-row">
+  <a href="/blog/pcie-inference/"><b>40.6 → 5.9</b><span>µs one-row all-reduce on PCIe GPUs</span></a>
+  <a href="/blog/million-token-context/"><b>1,045,368</b><span>input tokens in a measured retrieval run</span></a>
+  <a href="/blog/kimi-deployment-frontier/"><b>1,991</b><span>output tok/s, Kimi-K3 on 16 B200 GPUs</span></a>
+  <a href="/blog/agent-correctness/"><b>97 → 0</b><span>empty-argument failures, 1,600 forced calls</span></a>
+</div>
+<p class="fine">Research measurements under the conditions described in each note. They show how we engineer the stack. They are not platform service levels.</p></div>
+</div></section>
+
+<section class="sec"><div class="wrap">
+  <div class="sec-head"><div><p class="label reveal">Pricing</p><h2 class="display-sm reveal">From $0.10 per million tokens.</h2></div><a class="btn btn-ghost btn-sm reveal" href="/models/">All models <span aria-hidden="true">→</span></a></div>
+  <div class="cards-3">
+    <a class="box reveal" href="/models/"><p class="k"><img class="" src="/assets/logos/deepseek-color.svg" alt="" width="18" height="18"> DeepSeek</p><h3>DeepSeek-V4.1-Flash</h3><p>$0.10 input · $0.20 output per 1M tokens</p><span class="more">Details <span aria-hidden="true">→</span></span></a>
+    <a class="box reveal" href="/models/"><p class="k"><img class="" src="/assets/logos/zhipu-color.svg" alt="" width="18" height="18"> Zhipu</p><h3>GLM-5.3</h3><p>$0.10 input · $0.20 output per 1M tokens</p><span class="more">Details <span aria-hidden="true">→</span></span></a>
+    <a class="box reveal" href="/models/"><p class="k"><img class="" src="/assets/logos/kimi-light.svg" alt="" width="18" height="18"> Moonshot</p><h3>Kimi-K3.1-Pro</h3><p>$0.20 input · $0.40 output per 1M tokens</p><span class="more">Details <span aria-hidden="true">→</span></span></a>
+  </div>
+</div></section>
+<section class="cta-band"><div class="wrap">
+  <p class="label reveal">Zenith Tokens</p>
+  <h2 class="display-sm reveal">Make your first call in <em>minutes.</em></h2>
+  <div class="actions reveal"><a class="btn btn-light" href="https://tokens.aitist.ai/sign-up">Get an API key <span aria-hidden="true">→</span></a><a class="btn btn-ghost" href="/docs/">Read the quickstart</a><a class="btn btn-ghost" href="https://t.me/hokeemDeng">Talk to us on Telegram</a></div>
+</div></section>
+</main>
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a class="brand" href="/" aria-label="Zenith home"><svg viewBox="36 40 128 120" aria-hidden="true"><path fill="currentColor" d="M36 40H164V68H36Z M158.3 76L89.7 124H41.7L110.3 76Z M36 132H164V160H36Z"/></svg><span>Zenith</span></a>
+        <p>Efficient inference for open models. Any GPU we touch turns to gold.</p>
+        <div class="actions" style="margin-top:22px"><a class="btn btn-light btn-sm" href="https://tokens.aitist.ai/sign-up">Start building <span aria-hidden="true">→</span></a></div>
+      </div>
+      <div class="footer-cols">
+        <div><p class="label">Product</p><a href="/platform/">Zenith Tokens</a><a href="/models/">Models &amp; pricing</a><a href="https://tokens.aitist.ai/dashboard">Console ↗</a><a href="https://tokens.aitist.ai/rankings">Rankings ↗</a></div>
+        <div><p class="label">Developers</p><a href="/docs/">Quickstart</a><a href="/credits/">Developer credits</a><a href="https://docs.newapi.pro/">API reference ↗</a></div>
+        <div><p class="label">Research</p><a href="/blog/">Engineering</a><a href="/blog/pcie-inference/">Inference without NVLink</a><a href="/blog/million-token-context/">Million-token context</a></div>
+        <div><p class="label">Company</p><a href="/about/">About</a><a href="/news/">News</a><a href="/security/">Security</a><a href="https://t.me/hokeemDeng">Telegram @hokeemDeng ↗</a></div>
+      </div>
+    </div>
+    <div class="footer-mark" aria-hidden="true">Zenith</div>
+    <div class="footer-base"><span>© 2026 Zenith</span><span>Made from sand</span></div>
+  </div>
+</footer>
+<script src="/assets/v2.js?v=5" defer></script>
+</body>
+</html>

@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="几分钟内完成对 Zenith Tokens 的第一次调用。">
+<meta name="theme-color" content="#0a0a0a">
+<title>快速开始 · Zenith</title>
+<link rel="alternate" hreflang="en" href="/docs/">
+<link rel="alternate" hreflang="zh-CN" href="/zh/docs/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="/assets/fonts/inter.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/v2.css?v=7">
+<link rel="stylesheet" href="/assets/pages.css?v=5">
+</head>
+<body class="home v2">
+<a class="skip" href="#main">跳到正文</a>
+<header class="nav" role="banner">
+  <a class="brand" href="/zh/" aria-label="Zenith home"><svg viewBox="36 40 128 120" aria-hidden="true"><path fill="currentColor" d="M36 40H164V68H36Z M158.3 76L89.7 124H41.7L110.3 76Z M36 132H164V160H36Z"/></svg><span>Zenith</span></a>
+  <nav aria-label="Main">
+    <a href="/zh/platform/">平台</a>
+    <a href="/zh/models/">模型</a>
+    <a href="/zh/blog/">技术博客</a>
+    <a href="/zh/news/">动态</a>
+    <a href="/zh/about/">关于</a>
+  </nav>
+  <div class="nav-right"><a class="lang" href="/docs/" hreflang="en" lang="en">EN · <b>中文</b></a><a class="btn btn-light btn-sm" href="https://tokens.aitist.ai/sign-up">开始使用</a></div>
+</header>
+<main id="main" class="page">
+<section class="page-hero"><div class="wrap">
+  <p class="label reveal">开发者 · 快速开始</p>
+  <h1 class="reveal">三步，<em>完成第一次调用。</em></h1>
+  <p class="lede reveal">Zenith Tokens 兼容 OpenAI API。如果你的代码已经能调用 OpenAI，只需更换 base URL 和 key。</p>
+  <div class="actions reveal"><a class="btn btn-light" href="https://tokens.aitist.ai/sign-up">注册账号 <span aria-hidden="true">→</span></a><a class="btn btn-ghost" href="https://docs.newapi.pro/">完整 API 文档 ↗</a></div>
+  
+</div></section>
+<section class="sec"><div class="wrap split">
+  <aside class="split-aside"><p class="label">本页内容</p><a href="#key">1. 获取 key</a><a href="#call">2. 发起调用</a><a href="#apps">3. 在应用中使用</a><a href="#help">帮助</a></aside>
+  <div class="prose">
+    <h2 id="key">1. 获取 key</h2>
+    <p>在 Zenith Tokens <a href="https://tokens.aitist.ai/sign-up">注册账号</a>，打开<a href="https://tokens.aitist.ai/dashboard">控制台</a>创建 API key。每个 key 都可以设置额度、有效期和可调用的模型。</p>
+    <p>Base URL: <strong>https://tokens.aitist.ai/v1</strong></p>
+    <h2 id="call">2. 发起调用</h2>
+    <p>使用 curl 或 OpenAI Python SDK：</p>
+  </div>
+</div>
+<div class="wrap split" style="margin-top:20px"><div></div><div style="max-width:760px"><div class="code"><div class="code-bar"><span><i></i><i></i><i></i></span><span>curl · 兼容 OpenAI</span></div><pre><span class="kw">curl</span> https://tokens.aitist.ai/v1/chat/completions \
+  -H <span class="s">"Authorization: Bearer $ZENITH_API_KEY"</span> \
+  -H <span class="s">"Content-Type: application/json"</span> \
+  -d <span class="s">'{
+    "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+    "messages": [{"role": "user", "content": "你好，Zenith"}]
+  }'</span></pre></div><div style="height:16px"></div><div class="code"><div class="code-bar"><span><i></i><i></i><i></i></span><span>python · openai SDK</span></div><pre><span class="kw">from</span> openai <span class="kw">import</span> OpenAI
+
+client = OpenAI(
+    base_url=<span class="s">"https://tokens.aitist.ai/v1"</span>,
+    api_key=<span class="s">"sk-..."</span>,  <span class="c"># 在控制台创建 key</span>
+)
+
+reply = client.chat.completions.create(
+    model=<span class="s">"zai-org/GLM-5.3"</span>,
+    messages=[{<span class="s">"role"</span>: <span class="s">"user"</span>, <span class="s">"content"</span>: <span class="s">"总结一下这个仓库。"</span>}],
+    stream=<span class="kw">True</span>,
+)
+<span class="kw">for</span> chunk <span class="kw">in</span> reply:
+    print(chunk.choices[0].delta.content <span class="kw">or</span> <span class="s">""</span>, end=<span class="s">""</span>)</pre></div></div></div>
+<div class="wrap split" style="margin-top:20px"><div></div>
+  <div class="prose">
+    <p><a href="/zh/models/">模型页</a>上的任意模型都可以调用，模型名需完整复制，例如 <strong>moonshotai/Kimi-K3.1-Pro</strong>。</p>
+    <h2 id="apps">3. 在应用中使用</h2>
+    <ul>
+      <li><strong>Cherry Studio、CC Switch：</strong>使用控制台中的一键配置，或手动添加一个兼容 OpenAI 的服务商，填入上面的 base URL 和你的 key。</li>
+      <li><strong>Agent 框架：</strong>任何支持自定义 OpenAI base URL 的框架都可以直接使用，流式输出采用 SSE。</li>
+      <li><strong>监控：</strong>每个 key 的用量、费用和延迟会实时显示在控制台。</li>
+    </ul>
+    <h2 id="help">帮助</h2>
+    <p>网关的完整 API 文档见 <a href="https://docs.newapi.pro/">docs.newapi.pro</a>。其他问题请在 Telegram 联系 <a href="https://t.me/hokeemDeng">@hokeemDeng</a>。</p>
+  </div>
+</div></section>
+<section class="cta-band"><div class="wrap">
+  <p class="label reveal">Zenith Tokens</p>
+  <h2 class="display-sm reveal">几分钟内，完成<em>第一次调用。</em></h2>
+  <div class="actions reveal"><a class="btn btn-light" href="https://tokens.aitist.ai/sign-up">获取 API key <span aria-hidden="true">→</span></a><a class="btn btn-ghost" href="/zh/docs/">阅读快速开始</a><a class="btn btn-ghost" href="https://t.me/hokeemDeng">在 Telegram 联系我们</a></div>
+</div></section>
+</main>
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a class="brand" href="/zh/" aria-label="Zenith home"><svg viewBox="36 40 128 120" aria-hidden="true"><path fill="currentColor" d="M36 40H164V68H36Z M158.3 76L89.7 124H41.7L110.3 76Z M36 132H164V160H36Z"/></svg><span>Zenith</span></a>
+        <p>面向开源模型的高效推理。经我们之手的每一块 GPU，都会点石成金。</p>
+        <div class="actions" style="margin-top:22px"><a class="btn btn-light btn-sm" href="https://tokens.aitist.ai/sign-up">开始使用 <span aria-hidden="true">→</span></a></div>
+      </div>
+      <div class="footer-cols">
+        <div><p class="label">产品</p><a href="/zh/platform/">Zenith Tokens</a><a href="/zh/models/">模型与价格</a><a href="https://tokens.aitist.ai/dashboard">控制台 ↗</a><a href="https://tokens.aitist.ai/rankings">排行榜 ↗</a></div>
+        <div><p class="label">开发者</p><a href="/zh/docs/">快速开始</a><a href="/zh/credits/">开发者额度</a><a href="https://docs.newapi.pro/">API 文档 ↗</a></div>
+        <div><p class="label">研究</p><a href="/zh/blog/">技术博客</a><a href="/zh/blog/pcie-inference/">无 NVLink 推理</a><a href="/zh/blog/million-token-context/">百万 token 上下文</a></div>
+        <div><p class="label">公司</p><a href="/zh/about/">关于</a><a href="/zh/news/">动态</a><a href="/zh/security/">安全</a><a href="https://t.me/hokeemDeng">Telegram @hokeemDeng ↗</a></div>
+      </div>
+    </div>
+    <div class="footer-mark" aria-hidden="true">Zenith</div>
+    <div class="footer-base"><span>© 2026 芯华算 Zenith</span><span>源于沙</span></div>
+  </div>
+</footer>
+<script src="/assets/v2.js?v=5" defer></script>
+</body>
+</html>

@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="An HTTP 200 and valid JSON are not enough. Agent workloads need complete streams, correct tool arguments and faithful protocol behavior, so every fix ">
+<meta name="theme-color" content="#0a0a0a">
+<title>Correctness beyond a successful response · Zenith</title>
+<link rel="alternate" hreflang="en" href="/blog/agent-correctness/">
+<link rel="alternate" hreflang="zh-CN" href="/zh/blog/agent-correctness/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="/assets/fonts/inter.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/v2.css?v=7">
+<link rel="stylesheet" href="/assets/pages.css?v=5">
+</head>
+<body class="home v2">
+<a class="skip" href="#main">Skip to content</a>
+<header class="nav" role="banner">
+  <a class="brand" href="/" aria-label="Zenith home"><svg viewBox="36 40 128 120" aria-hidden="true"><path fill="currentColor" d="M36 40H164V68H36Z M158.3 76L89.7 124H41.7L110.3 76Z M36 132H164V160H36Z"/></svg><span>Zenith</span></a>
+  <nav aria-label="Main">
+    <a href="/platform/">Platform</a>
+    <a href="/models/">Models</a>
+    <a href="/blog/">Engineering</a>
+    <a href="/news/">News</a>
+    <a href="/about/">About</a>
+  </nav>
+  <div class="nav-right"><a class="lang" href="/zh/blog/agent-correctness/" hreflang="zh-CN" lang="zh-CN"><b>EN</b> · 中文</a><a class="btn btn-light btn-sm" href="https://tokens.aitist.ai/sign-up">Start building</a></div>
+</header>
+<main id="main" class="page">
+<article class="art">
+  <header class="art-hero wrap">
+    <a class="art-back" href="/blog/">← All engineering notes</a>
+    <p class="label">Agent reliability · 2026-11-13</p>
+    <h1>Correctness beyond a successful response</h1>
+    <p class="art-dek">An HTTP 200 and valid JSON are not enough. Agent workloads need complete streams, correct tool arguments and faithful protocol behavior, so every fix here comes with a controlled comparison.</p>
+    <div class="art-kpis"><div><b>4.7% → 0</b><span>tool-argument leaks in long multi-turn sessions</span></div><div><b>97 → 0</b><span>empty-argument failures, 1,600 forced calls</span></div><div><b>24 → 34</b><span>of 34 official interface tests after patches</span></div></div>
+  </header>
+  <div class="art-cover wrap"><img src="/assets/research/cover-3.webp" alt="" decoding="async"></div>
+  <div class="art-layout wrap">
+    <aside class="art-toc"><p class="label">On this page</p><a href="#leak">The arguments leaked into the arguments</a><a href="#guards">Guards that stay on</a><a href="#protocol">Protocol details break agents too</a><a href="#k3">Seven interface patches for Kimi-K3</a><a href="#effort">Thinking effort, and how to call us</a><a href="#drills">Drill failures before designing for them</a><a href="#data">Data &amp; sources</a></aside>
+    <div class="art-body">
+<h2 id="leak">The arguments leaked into the arguments</h2>
+<p>In long, multi-turn coding sessions, a small fraction of tool calls came back broken: the model wrote its own end-of-argument marker into the argument text. The cause was a worker setting that applied full constrained decoding to every request that carried tools. We reproduced it by replaying real sessions from three clients (Claude Code, Codex and opencode) and changed exactly one switch on the same worker.</p>
+<figure class="art-fig"><svg class="fig-svg" viewBox="0 0 960 258" role="img" aria-label="" xmlns="http://www.w3.org/2000/svg"><text x="230.0" y="22.0" font-size="12" fill="#a9a59c" text-anchor="start" font-weight="400" ></text><text x="20.0" y="66.0" font-size="14.5" fill="#f3f1ec" text-anchor="start" font-weight="500" >Tool-argument leaks</text><text x="218.0" y="54.0" font-size="1" fill="#a9a59c" text-anchor="start" font-weight="400" >—</text><rect x="230" y="40" width="477.8" height="26" rx="3" fill="#55524c"/><text x="717.8" y="59.0" font-size="14" fill="#a9a59c" text-anchor="start" font-weight="500" >4.7% (17 / 361)</text><rect x="230" y="76" width="3.0" height="26" rx="3" fill="#c9a86a"/><text x="243.0" y="95.0" font-size="14" fill="#c9a86a" text-anchor="start" font-weight="600" >0</text><text x="20.0" y="162.0" font-size="14.5" fill="#f3f1ec" text-anchor="start" font-weight="500" >Empty-argument failures</text><text x="218.0" y="150.0" font-size="1" fill="#a9a59c" text-anchor="start" font-weight="400" >—</text><rect x="230" y="136" width="537.9" height="26" rx="3" fill="#55524c"/><text x="777.9" y="155.0" font-size="14" fill="#a9a59c" text-anchor="start" font-weight="500" >97 · JSON-only constraint</text><rect x="230" y="172" width="3.0" height="26" rx="3" fill="#c9a86a"/><text x="243.0" y="191.0" font-size="14" fill="#c9a86a" text-anchor="start" font-weight="600" >0 · schema-constrained</text><text x="20.0" y="250.0" font-size="12" fill="#6f6c66" text-anchor="start" font-weight="400" >Leaks: same worker, real Claude Code sessions, one setting changed, Oct 15. Failures: BFCL forced calls, 1,600 per arm, Oct 21 canary.</text></svg><div class="fig-legend"><span><i style="background:#55524c"></i>Before</span><span><i style="background:#c9a86a"></i>After</span></div><figcaption>Fig. 1 · Two failure modes, before and after.</figcaption></figure>
+<p>After the change, 467 tool calls in our own real sessions produced zero leaks and zero regressions. For forced tool calls (a named function or <code>required</code>), we now constrain decoding to the function's argument schema instead of generic JSON; <code>auto</code> is unchanged. Empty-argument failures fell from 97 to 0 and Pass@1 rose from 87.4% to 92.6%.</p>
+<h2 id="guards">Guards that stay on</h2>
+<ul><li><strong>Degeneration loop guard.</strong> If more than 98% of the last 2,048 tokens are short repeated fragments, generation ends with <code>length</code>. In the canary it truncated 2 of 32 runs.</li><li><strong>Control-token injection guard.</strong> Control-token spellings inside user text are encoded as plain text. End and tool markers take effect only by token ID.</li><li><strong>A reference oracle.</strong> The same batch of requests is compared token by token against the official open-source reference implementation.</li></ul>
+<h2 id="protocol">Protocol details break agents too</h2>
+<p>The same round of work fixed four compatibility problems that never showed up as errors on a health check:</p>
+<ul><li>Segmented thinking content sent to the engine as an array failed from the second turn on.</li><li>The gateway dropped the thinking-effort field.</li><li>Clients that send no output budget now get a default reservation of min(32K, remaining context).</li><li>A hosted search tool that some clients include by default caused requests to be rejected.</li></ul>
+<h2 id="k3">Seven interface patches for Kimi-K3</h2>
+<div class="art-tbl"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Symptom</th><th>How we measured it</th><th>Fix</th></tr></thead><tbody><tr><td>With thinking off and temperature 1.0, about 10% of auto calls skip the tool</td><td>60 runs: 54/60 at 1.0 · 59/60 at 0.6 · 60/60 at 0</td><td>Default temperature 0.6 when thinking is off and none is given</td></tr><tr><td>Thinking on without an effort often answers in text instead of calling tools</td><td>36 runs: unspecified 30/36 · high 36/36 (half the tokens)</td><td>Default thinking effort = high</td></tr><tr><td>Named-function tool_choice reports finish_reason stop</td><td>One of the 34 official tests</td><td>Report tool_calls when calls are present</td></tr><tr><td>Small output budgets are eaten by thinking, no answer</td><td>64-token budget case</td><td>Thinking capped at half the total budget</td></tr><tr><td>OpenAI / Anthropic effort names not recognized</td><td>Messages / Responses cases</td><td>Map to the nearest K3 level</td></tr><tr><td>Prompt cache hits not reported</td><td>Cache case</td><td>Enable prompt token details</td></tr><tr><td>Invalid role returns 200</td><td>One of 18 cross-model tests</td><td>Use the official encoder</td></tr></tbody></table></div><p class="fine">Official interface tests went from 24/34 to 34/34; cross-model tests from 17/18 to 18/18; team acceptance passed four rounds in a row. All patches are in the interface layer; the model is untouched.</p></div>
+<h2 id="effort">Thinking effort, and how to call us</h2>
+<div class="art-tbl"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Effort</th><th>AIME 24+25</th><th>Note</th></tr></thead><tbody><tr><td>50 (before alignment)</td><td>97.9%</td><td>—</td></tr><tr><td>75 (high / xhigh)</td><td>99.6%</td><td>Default when thinking is on without a level</td></tr><tr><td>100 (max)</td><td>99.6%</td><td>About 18% more output tokens</td></tr></tbody></table></div></div>
+<ul><li><strong>Give enough output budget.</strong> Reasoning is 76–82% of output; set <code>max_tokens</code> to at least 4K–8K.</li><li><strong>Read <code>tool_calls</code>.</strong> When a function is named, calls always come back as <code>tool_calls</code>.</li><li><strong>Stream for agents.</strong> A non-streaming response cut off before a tool block closes can lose completed calls.</li><li><strong>Retry with Retry-After.</strong> Overload returns a retry hint; honor it.</li></ul>
+<h2 id="drills">Drill failures before designing for them</h2>
+<div class="art-tbl"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Drill (before the rework)</th><th>What happened</th><th>What we run now</th></tr></thead><tbody><tr><td>2× overload for 5 minutes</td><td>All 523 requests returned 200; first token 17 → 148 s; health checks stayed green</td><td>Concurrency cap at the measured knee; queue cap = first-token SLO − cold prefill</td></tr><tr><td>Kill a worker</td><td>7 streams cut after 200, with no [DONE] and no error</td><td>Primary/standby gateways; switch after 3 failed checks; actual gap 0.28–0.49 s</td></tr><tr><td>Pause for 60 s</td><td>One stream silently stalled for 70 s</td><td>60 s inter-token timeout; first-token timeout grows with uncached length</td></tr><tr><td>Client disconnects</td><td>Worker released within 7 s</td><td>Retry once on another node only if no bytes were sent</td></tr></tbody></table></div><p class="fine">Lesson: HTTP 200 is not a pass. A server must recognize a truncated stream and enforce an inter-token timeout.</p></div>
+<section class="art-data"><h2 id="data">Data &amp; sources</h2>
+<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Test</th><th>Observed result</th><th>Scope</th></tr></thead><tbody><tr><td>Tool-argument leaks</td><td>4.7% → 0</td><td>Real sessions, one setting changed, Oct 15</td></tr><tr><td>Empty-argument failures</td><td>97 → 0</td><td>BFCL forced calls, 1,600 per arm</td></tr><tr><td>Official interface tests (K3)</td><td>24/34 → 34/34</td><td>After seven interface-layer patches</td></tr></tbody></table></div>
+<p class="fine">October 2026 engineering measurements on the stated hardware and workload. They are not a cross-model ranking or a service-level guarantee.</p></section>
+      <div class="art-cta"><p>This work runs underneath Zenith Tokens.</p><a class="btn btn-light btn-sm" href="https://tokens.aitist.ai/sign-up">Try Zenith Tokens <span aria-hidden="true">→</span></a></div>
+      <nav class="art-nav"><a class="art-pn" href="/blog/kimi-deployment-frontier/"><small>Previous</small>Finding the useful throughput frontier</a><a class="art-pn next" href="/blog/kv-aware-serving/"><small>Next</small>A cache hit is not the end of the journey</a></nav>
+    </div>
+  </div>
+</article>
+</main>
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a class="brand" href="/" aria-label="Zenith home"><svg viewBox="36 40 128 120" aria-hidden="true"><path fill="currentColor" d="M36 40H164V68H36Z M158.3 76L89.7 124H41.7L110.3 76Z M36 132H164V160H36Z"/></svg><span>Zenith</span></a>
+        <p>Efficient inference for open models. Any GPU we touch turns to gold.</p>
+        <div class="actions" style="margin-top:22px"><a class="btn btn-light btn-sm" href="https://tokens.aitist.ai/sign-up">Start building <span aria-hidden="true">→</span></a></div>
+      </div>
+      <div class="footer-cols">
+        <div><p class="label">Product</p><a href="/platform/">Zenith Tokens</a><a href="/models/">Models &amp; pricing</a><a href="https://tokens.aitist.ai/dashboard">Console ↗</a><a href="https://tokens.aitist.ai/rankings">Rankings ↗</a></div>
+        <div><p class="label">Developers</p><a href="/docs/">Quickstart</a><a href="/credits/">Developer credits</a><a href="https://docs.newapi.pro/">API reference ↗</a></div>
+        <div><p class="label">Research</p><a href="/blog/">Engineering</a><a href="/blog/pcie-inference/">Inference without NVLink</a><a href="/blog/million-token-context/">Million-token context</a></div>
+        <div><p class="label">Company</p><a href="/about/">About</a><a href="/news/">News</a><a href="/security/">Security</a><a href="https://t.me/hokeemDeng">Telegram @hokeemDeng ↗</a></div>
+      </div>
+    </div>
+    <div class="footer-mark" aria-hidden="true">Zenith</div>
+    <div class="footer-base"><span>© 2026 Zenith</span><span>Made from sand</span></div>
+  </div>
+</footer>
+<script src="/assets/v2.js?v=5" defer></script>
+</body>
+</html>

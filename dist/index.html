@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Zenith develops efficient inference systems to bring AI within everyone’s reach.">
+<meta name="theme-color" content="#0a0a0a">
+<title>Zenith · Efficient inference</title>
+<link rel="alternate" hreflang="en" href="/">
+<link rel="alternate" hreflang="zh-CN" href="/zh/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="/assets/fonts/inter.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/v2.css?v=7">
+<link rel="stylesheet" href="/assets/pages.css?v=5">
+</head>
+<body class="home v2">
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="nav" role="banner">
+  <a class="brand" href="/" aria-label="Zenith home"><svg viewBox="36 40 128 120" aria-hidden="true"><path fill="currentColor" d="M36 40H164V68H36Z M158.3 76L89.7 124H41.7L110.3 76Z M36 132H164V160H36Z"/></svg><span>Zenith</span></a>
+  <nav aria-label="Main">
+    <a href="/platform/">Platform</a>
+    <a href="/models/">Models</a>
+    <a href="/blog/">Engineering</a>
+    <a href="/news/">News</a>
+    <a href="/about/">About</a>
+  </nav>
+  <div class="nav-right"><a class="lang" href="/zh/" hreflang="zh-CN" lang="zh-CN"><b>EN</b> · 中文</a><a class="btn btn-light btn-sm" href="https://tokens.aitist.ai/sign-up">Start building</a></div>
+</header>
+
+<main id="main">
+<section class="sand-hero" aria-labelledby="intro-title">
+  <div class="sand-stage">
+    <div class="hero-scene" aria-hidden="true"><canvas class="hero-canvas"></canvas></div>
+    <div class="hero-copy">
+      <p class="eyebrow reveal">Efficient inference</p>
+      <h1 id="intro-title" class="reveal">Any <em class="dim">GPU</em> we touch<br>turns to <em class="gold">gold.</em></h1>
+      <div class="hero-foot reveal">
+        <p>At their core, GPUs are sand. We make that sand smarter, so useful AI costs less to serve.</p>
+        <div class="actions">
+          <a class="btn btn-light" href="https://tokens.aitist.ai/sign-up">Start building <span aria-hidden="true">→</span></a>
+          <a class="btn btn-ghost" href="/platform/">Explore Zenith Tokens</a>
+        </div>
+      </div>
+    </div>
+    <div class="hero-index" aria-hidden="true">
+      <span><b>01</b> Communication</span><span><b>02</b> Long context</span><span><b>03</b> Throughput</span><span><b>04</b> Reliability</span>
+    </div>
+  </div>
+</section>
+
+<section class="statement" id="approach">
+  <div class="wrap">
+    <p class="label reveal">From silicon to possibility</p>
+    <h2 class="manifesto reveal">Intelligence starts with sand. <span>Across communication, memory and serving, we make the path from GPU to useful AI more efficient, and we publish the measurements behind every claim.</span></h2>
+    <div class="triptych">
+      <figure class="trip reveal"><div class="trip-media"><img src="/assets/tiles/sand.webp" alt="" loading="lazy" decoding="async" style="object-position:22% 50%"></div><figcaption><b>01</b><span>Sand</span>The raw material behind every chip.</figcaption></figure>
+      <figure class="trip reveal"><div class="trip-media"><img src="/assets/tiles/wafer.webp" alt="" loading="lazy" decoding="async" style="object-position:62% 50%"></div><figcaption><b>02</b><span>Silicon</span>Purified, patterned, made precise.</figcaption></figure>
+      <figure class="trip reveal"><div class="trip-media"><img src="/assets/tiles/gold-gpu.webp" alt="" loading="lazy" decoding="async" style="object-position:50% 78%"></div><figcaption><b>03</b><span>Service</span>Useful AI, served for less.</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<section class="product" id="product">
+  <div class="wrap product-grid">
+    <div>
+      <p class="label reveal">Zenith Tokens</p>
+      <h2 class="display-sm reveal">One API for open models. <em>Priced to be used.</em></h2>
+      <p class="lede reveal">Call DeepSeek, GLM, Kimi and Qwen through one OpenAI-compatible endpoint, served on the stack we research. From $0.10 per million input tokens.</p>
+      <div class="chips reveal"><span><img class="" src="/assets/logos/deepseek-color.svg" alt="" width="16" height="16"> DeepSeek-V4.1-Flash <em>$0.10 / $0.20</em></span><span><img class="" src="/assets/logos/zhipu-color.svg" alt="" width="16" height="16"> GLM-5.3 <em>$0.10 / $0.20</em></span><span><img class="" src="/assets/logos/zhipu-color.svg" alt="" width="16" height="16"> glm-5.3-flash <em>$0.10 / $0.20</em></span><span><img class="" src="/assets/logos/kimi-light.svg" alt="" width="16" height="16"> Kimi-K3.1-Pro <em>$0.20 / $0.40</em></span><span><img class="" src="/assets/logos/qwen-color.svg" alt="" width="16" height="16"> qwen3.8-flash-next <em>$0.10 / $0.20</em></span></div>
+      <p class="fine reveal" style="margin-top:12px">USD per 1M input / output tokens, November 20, 2026.</p>
+      <div class="actions reveal"><a class="btn btn-light" href="https://tokens.aitist.ai/sign-up">Get an API key <span aria-hidden="true">→</span></a><a class="btn btn-ghost" href="/models/">Models &amp; pricing</a><a class="btn btn-ghost" href="/docs/">Quickstart</a></div>
+    </div>
+    <div class="reveal"><div class="code"><div class="code-bar"><span><i></i><i></i><i></i></span><span>curl · OpenAI-compatible</span></div><pre><span class="kw">curl</span> https://tokens.aitist.ai/v1/chat/completions \
+  -H <span class="s">"Authorization: Bearer $ZENITH_API_KEY"</span> \
+  -H <span class="s">"Content-Type: application/json"</span> \
+  -d <span class="s">'{
+    "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+    "messages": [{"role": "user", "content": "Hello, Zenith"}]
+  }'</span></pre></div></div>
+  </div>
+</section>
+
+<section class="evidence" id="evidence">
+  <div class="wrap evidence-grid">
+    <div class="evidence-visual">
+      <div class="story-stage" aria-hidden="true"><canvas class="story-canvas"></canvas></div>
+      <p class="label">Zenith / material <span class="stage-index">01 / 04</span></p>
+      <p class="visual-caption"><span class="stage-name">Silicon.</span> <em class="stage-line">Sand, purified and made precise.</em></p>
+    </div>
+    <div class="evidence-list">
+      <article class="metric" id="communication">
+        <p class="label"><span>01</span>Communication</p>
+        <h3>Less waiting. More computing.</h3>
+        <div class="figure">40.6<span class="arrow">→</span>5.9</div>
+        <p class="unit">µs · one-row all-reduce</p>
+        <p class="copy">Topology-aware communication reduces overhead on PCIe-connected GPUs. A collective microbenchmark, not an end-to-end speedup.</p>
+        <a class="link" href="/blog/pcie-inference/">Read the research and conditions <span aria-hidden="true">→</span></a>
+      </article>
+      <article class="metric" id="context">
+        <p class="label"><span>02</span>Long context</p>
+        <h3>A million tokens. Still within reach.</h3>
+        <div class="figure">1,045,368</div>
+        <p class="unit">input tokens · three needles retrieved</p>
+        <p class="copy">A measured long-context retrieval run. Capacity, communication and latency are evaluated together.</p>
+        <a class="link" href="/blog/million-token-context/">Read the research and conditions <span aria-hidden="true">→</span></a>
+      </article>
+      <article class="metric" id="throughput">
+        <p class="label"><span>03</span>Useful throughput</p>
+        <h3>More output. A usable stream.</h3>
+        <div class="figure">1,991</div>
+        <p class="unit">output tok/s · 16 B200 GPUs</p>
+        <p class="copy">Kimi-K3 at concurrency 64: 41 tok/s per user. Corrected wall-clock measurement; broader acceptance pending.</p>
+        <a class="link" href="/blog/kimi-deployment-frontier/">Read the research and conditions <span aria-hidden="true">→</span></a>
+      </article>
+      <article class="metric" id="reliability">
+        <p class="label"><span>04</span>Agent reliability</p>
+        <h3>Correctness is part of performance.</h3>
+        <div class="figure">97<span class="arrow">→</span>0</div>
+        <p class="unit">empty-argument failures · 1,600 forced calls</p>
+        <p class="copy">Observed failures in this test suite fell to zero after the fix. A measured sample, not a universal zero-error claim.</p>
+        <a class="link" href="/blog/agent-correctness/">Read the research and conditions <span aria-hidden="true">→</span></a>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="gallery" id="research">
+  <div class="gallery-head wrap">
+    <p class="label reveal">Research</p>
+    <h2 class="display-sm reveal">Show the work.</h2>
+  </div>
+  <div class="tiles">
+    <a class="tile tile-full" href="/blog/pcie-inference/">
+      <img src="/assets/tiles/gpus-wide.webp" alt="" loading="lazy" decoding="async" class="pos-bottom">
+      <div class="tile-copy"><p class="meta">Systems</p><h3>Inference, without NVLink.</h3><p>On PCIe GPUs, a small collective can matter more than a faster matrix multiply.</p><div class="tile-cta"><span class="btn btn-light btn-sm">Read the research</span><span class="btn btn-ghost btn-sm">40.6 → 5.9 µs</span></div></div>
+    </a>
+    <a class="tile" href="/blog/million-token-context/">
+      <img src="/assets/tiles/crystal.webp" alt="" loading="lazy" decoding="async" class="pos-bottom">
+      <div class="tile-copy"><p class="meta">Long context</p><h3>A million tokens.</h3><p>Capacity, communication and latency, measured together.</p><div class="tile-cta"><span class="btn btn-light btn-sm">Read</span><span class="btn btn-ghost btn-sm">1,045,368 tokens</span></div></div>
+    </a>
+    <a class="tile" href="/blog/kimi-deployment-frontier/">
+      <img src="/assets/tiles/gold-gpu.webp" alt="" loading="lazy" decoding="async" class="pos-bottom">
+      <div class="tile-copy"><p class="meta">Deployment</p><h3>The useful frontier.</h3><p>Faster batches, only while every user still gets a usable stream.</p><div class="tile-cta"><span class="btn btn-light btn-sm">Read</span><span class="btn btn-ghost btn-sm">1,991 tok/s</span></div></div>
+    </a>
+    <a class="tile" href="/blog/agent-correctness/">
+      <img src="/assets/tiles/chip.webp" alt="" loading="lazy" decoding="async" class="pos-bottom">
+      <div class="tile-copy"><p class="meta">Agent reliability</p><h3>Beyond HTTP 200.</h3><p>Complete streams, correct tool arguments, faithful protocols.</p><div class="tile-cta"><span class="btn btn-light btn-sm">Read</span><span class="btn btn-ghost btn-sm">97 → 0 failures</span></div></div>
+    </a>
+    <a class="tile tile-photo" href="/blog/kv-aware-serving/">
+      <img src="/assets/tiles/dc.webp" alt="" loading="lazy" decoding="async">
+      <div class="tile-copy"><p class="meta">Serving</p><h3>Follow the bytes.</h3><p>A cache hit is not the end of the journey.</p><div class="tile-cta"><span class="btn btn-light btn-sm">Read</span></div></div>
+    </a>
+    <a class="tile tile-full tile-photo tile-left" href="/blog/evidence-driven-engineering/">
+      <img src="/assets/tiles/wafer.webp" alt="" loading="lazy" decoding="async">
+      <div class="tile-copy"><p class="meta">Engineering method</p><h3>Every iteration leaves<br>better evidence.</h3><p>Humans, agents and a shared knowledge base improve the system, and the next experiment.</p><div class="tile-cta"><span class="btn btn-light btn-sm">Read the research</span><span class="btn btn-ghost btn-sm">All research</span></div></div>
+    </a>
+  </div>
+</section>
+
+<section class="latest" id="latest">
+  <div class="wrap">
+    <div class="row-head"><h2 class="reveal">Latest research notes</h2><a class="link reveal" href="/blog/">View all <span aria-hidden="true">→</span></a></div>
+    <div class="news">
+      <a class="news-item reveal" href="/blog/pcie-inference/"><img src="/assets/research/cover-0.webp" alt="" loading="lazy" decoding="async"><div><h3>Rethinking inference without NVLink</h3><p>Systems · Nov 13, 2026</p></div></a>
+      <a class="news-item reveal" href="/blog/million-token-context/"><img src="/assets/research/cover-1.webp" alt="" loading="lazy" decoding="async"><div><h3>Making a million tokens usable</h3><p>Long context · Nov 13, 2026</p></div></a>
+      <a class="news-item reveal" href="/blog/kimi-deployment-frontier/"><img src="/assets/research/cover-2.webp" alt="" loading="lazy" decoding="async"><div><h3>Finding the useful throughput frontier</h3><p>Deployment · Nov 13, 2026</p></div></a>
+      <a class="news-item reveal" href="/blog/agent-correctness/"><img src="/assets/research/cover-3.webp" alt="" loading="lazy" decoding="async"><div><h3>Correctness beyond a successful response</h3><p>Agent reliability · Nov 13, 2026</p></div></a>
+      <a class="news-item reveal" href="/blog/kv-aware-serving/"><img src="/assets/research/cover-4.webp" alt="" loading="lazy" decoding="async"><div><h3>A cache hit is not the end of the journey</h3><p>Serving · Nov 13, 2026</p></div></a>
+      <a class="news-item reveal" href="/blog/evidence-driven-engineering/"><img src="/assets/research/cover-5.webp" alt="" loading="lazy" decoding="async"><div><h3>Every iteration should leave better evidence</h3><p>Engineering method · Nov 13, 2026</p></div></a>
+      <a class="news-item reveal" href="/blog/inference-efficiency/"><img src="/assets/tiles/sand.webp" alt="" loading="lazy" decoding="async"><div><h3>What does it mean to get more from every chip?</h3><p>Inference · Framework</p></div></a>
+      <a class="news-item reveal" href="/blog/target-verify-compound/"><img src="/assets/tiles/hands.webp" alt="" loading="lazy" decoding="async"><div><h3>Target, verify, compound</h3><p>Method · Framework</p></div></a>
+    </div>
+  </div>
+</section>
+
+<section class="method" id="method">
+  <div class="wrap method-grid">
+    <figure class="method-media reveal"><img src="/assets/tiles/hands.webp" alt="" loading="lazy" decoding="async"></figure>
+    <div class="method-body">
+      <p class="label reveal">How we work</p>
+      <h2 class="display-sm reveal">Every iteration leaves a better <em>starting point.</em></h2>
+      <ol class="steps">
+        <li class="reveal"><span>01</span><div><h3>Define a test</h3><p>Start from the question and the workload it should serve.</p></div></li>
+        <li class="reveal"><span>02</span><div><h3>Measure the baseline</h3><p>Profile topology, memory and latency before tuning anything.</p></div></li>
+        <li class="reveal"><span>03</span><div><h3>Challenge the conclusion</h3><p>Re-run, cross-check, publish with the conditions.</p></div></li>
+        <li class="reveal"><span>04</span><div><h3>Keep the evidence</h3><p>What we learn becomes the next starting point.</p></div></li>
+      </ol>
+      <div class="stats reveal"><div><strong>227</strong><span>commits</span></div><div><strong>36</strong><span>merged PRs</span></div></div>
+      <p class="note reveal">October 11 to 20, 2026 repository review. Engineers directed the work and approved production changes.</p>
+    </div>
+  </div>
+</section>
+
+<section class="mission">
+  <div class="mission-bg" aria-hidden="true"><img src="/assets/tiles/sand.webp" alt="" loading="lazy" decoding="async"></div>
+  <div class="wrap">
+    <p class="label reveal">Our mission</p>
+    <h2 class="display reveal">Bring AI within <em>everyone’s reach.</em></h2>
+    <div class="actions reveal">
+      <a class="btn btn-light" href="https://tokens.aitist.ai/sign-up">Start building <span aria-hidden="true">→</span></a>
+      <a class="btn btn-ghost" href="https://t.me/hokeemDeng">Talk to us on Telegram</a>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a class="brand" href="/" aria-label="Zenith home"><svg viewBox="36 40 128 120" aria-hidden="true"><path fill="currentColor" d="M36 40H164V68H36Z M158.3 76L89.7 124H41.7L110.3 76Z M36 132H164V160H36Z"/></svg><span>Zenith</span></a>
+        <p>Efficient inference for open models. Any GPU we touch turns to gold.</p>
+        <div class="actions" style="margin-top:22px"><a class="btn btn-light btn-sm" href="https://tokens.aitist.ai/sign-up">Start building <span aria-hidden="true">→</span></a></div>
+      </div>
+      <div class="footer-cols">
+        <div><p class="label">Product</p><a href="/platform/">Zenith Tokens</a><a href="/models/">Models &amp; pricing</a><a href="https://tokens.aitist.ai/dashboard">Console ↗</a><a href="https://tokens.aitist.ai/rankings">Rankings ↗</a></div>
+        <div><p class="label">Developers</p><a href="/docs/">Quickstart</a><a href="/credits/">Developer credits</a><a href="https://docs.newapi.pro/">API reference ↗</a></div>
+        <div><p class="label">Research</p><a href="/blog/">Engineering</a><a href="/blog/pcie-inference/">Inference without NVLink</a><a href="/blog/million-token-context/">Million-token context</a></div>
+        <div><p class="label">Company</p><a href="/about/">About</a><a href="/news/">News</a><a href="/security/">Security</a><a href="https://t.me/hokeemDeng">Telegram @hokeemDeng ↗</a></div>
+      </div>
+    </div>
+    <div class="footer-mark" aria-hidden="true">Zenith</div>
+    <div class="footer-base"><span>© 2026 Zenith</span><span>Made from sand</span></div>
+  </div>
+</footer>
+
+<script type="module" src="/assets/boot.js?v=8"></script>
+<script src="/assets/v2.js?v=4" defer></script>
+</body>
+</html>

@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="一个衡量推理效率的框架：同时看延迟、吞吐与每个完成任务的成本。">
+<meta name="theme-color" content="#0a0a0a">
+<title>从每一块芯片榨出更多，意味着什么？ · Zenith</title>
+<link rel="alternate" hreflang="en" href="/zh/blog/inference-efficiency/">
+<link rel="alternate" hreflang="zh-CN" href="/zh/blog/inference-efficiency/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="/assets/fonts/inter.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/v2.css?v=7">
+<link rel="stylesheet" href="/assets/pages.css?v=5">
+</head>
+<body class="home v2">
+<a class="skip" href="#main">跳到正文</a>
+<header class="nav" role="banner">
+  <a class="brand" href="/zh/" aria-label="Zenith home"><svg viewBox="36 40 128 120" aria-hidden="true"><path fill="currentColor" d="M36 40H164V68H36Z M158.3 76L89.7 124H41.7L110.3 76Z M36 132H164V160H36Z"/></svg><span>Zenith</span></a>
+  <nav aria-label="Main">
+    <a href="/zh/platform/">平台</a>
+    <a href="/zh/models/">模型</a>
+    <a href="/zh/blog/">技术博客</a>
+    <a href="/zh/news/">动态</a>
+    <a href="/zh/about/">关于</a>
+  </nav>
+  <div class="nav-right"><a class="lang" href="/zh/blog/inference-efficiency/" hreflang="en" lang="en">EN · <b>中文</b></a><a class="btn btn-light btn-sm" href="https://tokens.aitist.ai/sign-up">开始使用</a></div>
+</header>
+<main id="main" class="page">
+<article class="art">
+  <header class="art-hero wrap">
+    <a class="art-back" href="/zh/blog/">← 全部技术文章</a>
+    <p class="label">推理 · 方法框架 · 2026-11-13</p>
+    <h1>从每一块芯片榨出更多，意味着什么？</h1>
+    <p class="art-dek">一个衡量推理效率的框架：同时看延迟、吞吐与每个完成任务的成本。</p>
+    
+  </header>
+  <div class="art-cover wrap"><img src="/assets/tiles/wafer.webp" alt="" decoding="async"></div>
+  <div class="art-layout wrap">
+    <aside class="art-toc"><p class="label">本页内容</p><a href="#w">01 · 从负载出发</a><a href="#s">02 · 测量服务本身</a><a href="#c">03 · 只数完成的工作</a><a href="#e">04 · 留下证据</a></aside>
+    <div class="art-body">
+<h2 id="w">01 · 从负载出发</h2>
+<p>比较的单位是负载。比较配置之前，先固定模型、请求组合与质量要求。记录硬件、并发、输入长度与输出长度，让每个结果都能在上下文中被正确解读。</p>
+<h2 id="s">02 · 测量服务本身</h2>
+<p>在看吞吐的同时，追踪首 token 时间与每个输出 token 的时间，并报告目标负载下的长尾延迟。只有当请求仍能在服务的延迟预算内完成时，更高的 token 速率才有意义。</p>
+<h2 id="c">03 · 只数完成的工作</h2>
+<p>每个完成任务的成本，把算力、重试与质量放进同一本账。对固定负载，用服务成本除以同时满足质量与延迟要求的请求数。</p>
+<h2 id="e">04 · 留下证据</h2>
+<p>记录基线、候选、测试条件与任何回归。在推广候选之前重复比较一次，并把被采纳的配置作为下一轮的基线。</p>
+
+      <div class="art-cta"><p>这些工程都运行在 Zenith Tokens 之下。</p><a class="btn btn-light btn-sm" href="https://tokens.aitist.ai/sign-up">试用 Zenith Tokens <span aria-hidden="true">→</span></a></div>
+      <nav class="art-nav"><a class="art-pn" href="/zh/blog/evidence-driven-engineering/"><small>上一篇</small>每一次迭代，都应留下更好的证据</a><a class="art-pn next" href="/zh/blog/target-verify-compound/"><small>下一篇</small>设定目标、验证、复利</a></nav>
+    </div>
+  </div>
+</article>
+</main>
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a class="brand" href="/zh/" aria-label="Zenith home"><svg viewBox="36 40 128 120" aria-hidden="true"><path fill="currentColor" d="M36 40H164V68H36Z M158.3 76L89.7 124H41.7L110.3 76Z M36 132H164V160H36Z"/></svg><span>Zenith</span></a>
+        <p>面向开源模型的高效推理。经我们之手的每一块 GPU，都会点石成金。</p>
+        <div class="actions" style="margin-top:22px"><a class="btn btn-light btn-sm" href="https://tokens.aitist.ai/sign-up">开始使用 <span aria-hidden="true">→</span></a></div>
+      </div>
+      <div class="footer-cols">
+        <div><p class="label">产品</p><a href="/zh/platform/">Zenith Tokens</a><a href="/zh/models/">模型与价格</a><a href="https://tokens.aitist.ai/dashboard">控制台 ↗</a><a href="https://tokens.aitist.ai/rankings">排行榜 ↗</a></div>
+        <div><p class="label">开发者</p><a href="/zh/docs/">快速开始</a><a href="/zh/credits/">开发者额度</a><a href="https://docs.newapi.pro/">API 文档 ↗</a></div>
+        <div><p class="label">研究</p><a href="/zh/blog/">技术博客</a><a href="/zh/blog/pcie-inference/">无 NVLink 推理</a><a href="/zh/blog/million-token-context/">百万 token 上下文</a></div>
+        <div><p class="label">公司</p><a href="/zh/about/">关于</a><a href="/zh/news/">动态</a><a href="/zh/security/">安全</a><a href="https://t.me/hokeemDeng">Telegram @hokeemDeng ↗</a></div>
+      </div>
+    </div>
+    <div class="footer-mark" aria-hidden="true">Zenith</div>
+    <div class="footer-base"><span>© 2026 芯华算 Zenith</span><span>源于沙</span></div>
+  </div>
+</footer>
+<script src="/assets/v2.js?v=5" defer></script>
+</body>
+</html>
