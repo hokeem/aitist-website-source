@@ -1,4 +1,4 @@
-import { createScene } from './scene.js';
+import { createScene } from './scene.js?v=responsive1';
 const ZH = document.documentElement.lang.startsWith('zh');
 const STAGES = ZH ? [
   ['硅。', '提纯的沙，变得精确。'],

@@ -80,8 +80,8 @@ def write(L, path, title, desc, body):
 <link rel="alternate" hreflang="zh-CN" href="{alt_zh}">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="preload" href="/assets/fonts/inter.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/v2.css?v=7">
-<link rel="stylesheet" href="/assets/pages.css?v=5">
+<link rel="stylesheet" href="/assets/v2.css?v=8">
+<link rel="stylesheet" href="/assets/pages.css?v=6">
 </head>
 <body class="home v2">
 <a class="skip" href="#main">{L.t('Skip to content', '跳到正文')}</a>
@@ -90,7 +90,7 @@ def write(L, path, title, desc, body):
 {body}
 </main>
 {footer(L)}
-<script src="/assets/v2.js?v=5" defer></script>
+<script src="/assets/v2.js?v=responsive1" defer></script>
 </body>
 </html>
 '''

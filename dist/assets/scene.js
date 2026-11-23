@@ -265,11 +265,12 @@ export function createScene(canvas, opts = {}) {
     const dpr = Math.min(devicePixelRatio || 1, mode === 'hero' ? 1.75 : 2);
     renderer.setPixelRatio(dpr); renderer.setSize(w, h, false);
     camera.aspect = w / h; camera.updateProjectionMatrix();
-    state.halfW = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * 11 * camera.aspect; state.portrait = w / h < 1;
+    state.halfW = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * 11 * camera.aspect; state.portrait = w / h < 1; state.compact = mode === 'hero' && matchMedia('(max-width:1000px)').matches;
     if (river) river.material.uniforms.uPix.value = 2.6 * dpr;
     if (orbit) orbit.material.uniforms.uPix.value = 2.2 * dpr;
   }
   resize(); addEventListener('resize', resize);
+  if ('ResizeObserver' in window) new ResizeObserver(resize).observe(canvas);
   addEventListener('pointermove', e => { state.mx = e.clientX / innerWidth - .5; state.my = e.clientY / innerHeight - .5; }, { passive: true });
 
   const sm = { mx: 0, my: 0, scroll: 0 };
@@ -285,12 +286,14 @@ export function createScene(canvas, opts = {}) {
       const hw = state.halfW, por = state.portrait, U = river.material.uniforms, sc = sm.scroll;
       const gold = sstep(.06, .55, sc);
       gpu.userData.setGold(gold); U.uGold.value = gold * .85;
-      if (por) { gpu.position.set(0, 2.25 + sc * .6, 0); gpu.scale.setScalar(.5); }
+      if (state.compact) { gpu.position.set(0, .55, 0); gpu.scale.setScalar(.7); }
+      else if (por) { gpu.position.set(0, 2.25 + sc * .6, 0); gpu.scale.setScalar(.5); }
       else { gpu.position.set(hw * .36 + sm.mx * .3, 1.25 + Math.sin(t * .5) * .05 + sc * .25, 0); gpu.scale.setScalar(.84); }
       gpu.rotation.set(-1.02 + Math.sin(t * .35) * .03 + sm.my * .08 + sc * .25, -.28 + Math.sin(t * .22) * .05 + sm.mx * .12, .1);
       gpu.updateMatrixWorld(true);
       sinkOf(gpu, U.uS.value);
-      if (por) { U.uL.value.set(-hw * 1.9, 3.6, -1.5); U.uR.value.set(hw * 1.9, 1.4, .5); U.uW0.value = .7; U.uW1.value = .45; }
+      if (state.compact) { U.uL.value.set(-hw * 1.4, 1.6, -1.5); U.uR.value.set(hw * 1.4, -.2, .5); U.uW0.value = .55; U.uW1.value = .4; }
+      else if (por) { U.uL.value.set(-hw * 1.9, 3.6, -1.5); U.uR.value.set(hw * 1.9, 1.4, .5); U.uW0.value = .7; U.uW1.value = .45; }
       else { U.uL.value.set(-hw * 1.4, 1.4, -1.5); U.uR.value.set(hw * 1.35, 2.6, -1.2); U.uW0.value = .85 + sc * .5; U.uW1.value = .6; }
       camera.position.set(sm.mx * .6, -sm.my * .35, 11 - sc * .7); camera.lookAt(0, .55 + sc * .45, 0);
     } else {

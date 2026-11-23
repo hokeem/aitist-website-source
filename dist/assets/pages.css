@@ -257,3 +257,48 @@ html[lang^=zh] .art-body>p,html[lang^=zh] .art-body li{line-height:1.95;font-siz
   .note-grid{grid-template-columns:1fr}.art-nav{grid-template-columns:1fr}.art-cta{flex-direction:column;align-items:flex-start}
   .art-fig{padding:18px 14px 14px}
 }
+
+/* Keep long model names, code and research tables inside their own columns. */
+.product-grid>*,.split>*,.art-layout>*,.note-feature>*,.note-grid>*,.model-grid>*,.cards-2>*,.cards-3>*,.cards-4>*{min-width:0}
+.code,.tbl-wrap{min-width:0;max-width:100%}
+.code pre,.tbl-wrap{overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch}
+.box,.model,.prose,.art-body,.note-body{overflow-wrap:anywhere}
+.chips span{max-width:100%;flex-wrap:wrap;overflow-wrap:anywhere}
+.chips img{flex-shrink:0}
+.tbl-wrap:focus-visible,.code pre:focus-visible{outline:2px solid var(--gold);outline-offset:4px}
+@media (max-width:1000px){
+  html[lang^=zh] .hero-copy h1{font-size:clamp(36px,6.5vw,62px);line-height:1.2}
+}
+@media (max-width:640px){
+  .page{padding-top:var(--nav-height)}
+  .page-hero{padding:56px 0 44px}
+  .page-hero h1,.art-hero h1{font-size:clamp(34px,9vw,48px);overflow-wrap:anywhere}
+  html[lang^=zh] .page-hero h1,html[lang^=zh] .art-hero h1{font-size:clamp(32px,8.5vw,44px)}
+  html[lang^=zh] .hero-copy h1{font-size:clamp(32px,8.5vw,48px)}
+  .page-hero .lede,.art-dek{font-size:17px}
+  .sec{padding:56px 0}
+  .art-hero{padding:48px 0 32px}
+  .art-back{margin-bottom:24px}
+  .art-body>p,.art-body li,.prose p,.prose li{font-size:16px;line-height:1.8}
+  html[lang^=zh] .art-body>p,html[lang^=zh] .art-body li{font-size:16px}
+  .art-body>h2{margin-top:48px;font-size:28px}
+  .art-kpis{margin-top:28px}
+  .art-cover img{aspect-ratio:4/3}
+  .note-kpis{gap:20px}
+  .model{padding:24px}
+  .model .price{flex-wrap:wrap;gap:16px}
+  .chips span{font-size:12px;padding:8px 12px;gap:6px}
+  .code-bar{font-size:10px;padding-inline:14px;gap:10px;line-height:1.4}
+  .code pre{padding:18px 16px;font-size:12px}
+  .tbl{font-size:14px}
+  .tbl th,.tbl td{padding:14px 12px}
+  .stat-row b{font-size:clamp(30px,9vw,46px);overflow-wrap:anywhere}
+  .note-kpis b,.note-kpi b{font-size:28px}
+}
+@media (max-width:640px){
+  /* Preserve legible diagram labels instead of shrinking 1000px SVGs to phone width. */
+  .art-fig{overflow-x:auto;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch}
+  .art-fig .fig-svg{min-width:620px}
+  .art-fig::before{content:'Swipe to explore diagram →';display:block;margin-bottom:14px;font:500 11px/1.5 var(--sans);color:var(--fg-2)}
+  html[lang^=zh] .art-fig::before{content:'左右滑动查看完整图表 →'}
+}
